@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', 'Segoe UI', sans-serif;
+  --color-card: #1a1a1f;
+  --color-card-border: rgba(255, 255, 255, 0.06);
+  --color-surface: #0d0d0f;
+  --color-glass: rgba(20, 20, 24, 0.65);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+  --color-accent: #a78bfa;
+  --color-accent-warm: #f59e0b;
+  --color-muted: #71717a;
+}
+
+/* ===== Global ===== */
+@font-face {
+  font-family: 'Inter';
+  src: url('https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  color: #111827;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: crosshair;
+}
+
+/* Dot-grid background */
+.dot-grid-bg {
+  background-color: #ffffff;
+  background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glassmorphism — inner podcast widget etc. */
+.glass {
+  background-color: rgba(26, 26, 26, 0.75);
+  background-image: radial-gradient(rgba(55, 65, 81, 0.8) 1px, transparent 1px);
+  background-size: 20px 20px;
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--color-glass-border);
+}
+
+/* Floating curved navbar */
+.glass-nav {
+  background: rgba(0, 0, 0, 0.90);
+  backdrop-filter: blur(40px) saturate(1.6);
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.3),
+    0 8px 20px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Bento card base — 3D glass depth */
+.bento-card {
+  background-color: #000000;
+  background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
+  background-size: 20px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+}
+.bento-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.2),
+    0 0 40px rgba(167, 139, 250, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Inner card content pops forward in 3D space */
+.bento-card-inner {
+  transform: translateZ(30px);
+  transform-style: preserve-3d;
+}
+
+/* Arc chart gradient */
+.arc-gradient {
+  background: conic-gradient(
+    from 180deg,
+    #ef4444 0deg,
+    #f97316 40deg,
+    #eab308 80deg,
+    #22c55e 120deg,
+    #06b6d4 155deg,
+    #3b82f6 175deg,
+    #8b5cf6 180deg
+  );
+}
+
+/* Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Custom progress bar for audio player */
+.progress-track {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  cursor: pointer;
+}
+.progress-track::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #a78bfa;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.5);
+}
+
+/* Globe wireframe animation */
+@keyframes rotate-globe {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.globe-rotate {
+  animation: rotate-globe 30s linear infinite;
+}
+
+/* Glow */
+.glow-blue {
+  box-shadow: 0 0 60px rgba(59, 130, 246, 0.15), 0 0 120px rgba(59, 130, 246, 0.05);
+}
+
+/* Skill bar fill animation */
+@keyframes fill-bar {
+  from { width: 0%; }
+  to { width: var(--fill); }
+}
+.skill-fill {
+  animation: fill-bar 1.2s ease-out forwards;
+}
+
+/* Evidence Scanline Sweep */
+@keyframes scanlineSweep {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(300%); }
+}
+.animate-scanline {
+  animation: scanlineSweep 4s linear infinite;
+}
+
