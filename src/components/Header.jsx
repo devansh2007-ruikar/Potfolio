@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import DecryptText from './DecryptText'
 
-const navItems = ['Dashboard', 'Projects', 'Community', 'AI']
+const navItems = ['Dashboard', 'Projects', 'About Me']
 
-export default function Header() {
-  const [activeNav, setActiveNav] = useState('Dashboard')
+export default function Header({ activeNav = 'Dashboard', onNavChange }) {
   const [isMuted, setIsMuted] = useState(false)
   const [speed, setSpeed] = useState(0)
 
+  // Cursor speed tracker
   useEffect(() => {
     let lastX = null
     let lastY = null
@@ -31,10 +31,10 @@ export default function Header() {
         const dx = currentX - lastX
         const dy = currentY - lastY
         const distance = Math.sqrt(dx * dx + dy * dy)
-        
+
         // Multiply distance by 10 to get pixels per second (since interval is 100ms)
         const currentSpeed = Math.round(distance * 10)
-        
+
         // Smooth the speed, but snap to 0 instantly when stopped
         setSpeed((prev) => {
           if (currentSpeed === 0) return 0
@@ -55,9 +55,12 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center mt-4 px-4">
       <div className="glass-nav max-w-[1100px] w-full rounded-full px-5 sm:px-6 h-14 flex items-center justify-between">
-        {/* Left: Logo + Mode Toggle */}
+        {/* Left: Logo */}
         <div className="flex items-center gap-4">
-          <span className="text-xl font-extrabold tracking-tight text-white cursor-pointer">
+          <span
+            onClick={() => onNavChange?.('Dashboard')}
+            className="text-xl font-extrabold tracking-tight text-white cursor-pointer"
+          >
             <DecryptText text="Devv" />
           </span>
         </div>
@@ -67,7 +70,7 @@ export default function Header() {
           {navItems.map((item) => (
             <button
               key={item}
-              onClick={() => setActiveNav(item)}
+              onClick={() => onNavChange?.(item)}
               className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer ${
                 activeNav === item
                   ? 'text-black'

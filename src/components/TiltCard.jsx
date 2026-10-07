@@ -7,6 +7,7 @@ const LIFT = 20 // translateZ pixels
 const TRANSITION_OUT = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)'
 const TRANSITION_IN = 'transform 0.12s ease-out'
 const DEFAULT_TRANSFORM = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)'
+const FLATTEN = 'transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)'
 
 export default function TiltCard({ children, className = '', disabled: disabledProp = false }) {
   const cardRef = useRef(null)
@@ -20,23 +21,17 @@ export default function TiltCard({ children, className = '', disabled: disabledP
 
   function resetTilt() {
     setStyle({
-      transform: isDisabled ? 'none' : DEFAULT_TRANSFORM,
-      transition: 'none',
+      transform: DEFAULT_TRANSFORM,
+      transition: FLATTEN,
     })
   }
 
-  // When disabled, immediately set { transform: 'none', transition: 'none' }
-  // When re-enabled, set the default transform with transition: 'none'
+  // When disabled, ease back to flat (never snap with 'none'). When re-enabled, do nothing.
   useEffect(() => {
     if (isDisabled) {
       setStyle({
-        transform: 'none',
-        transition: 'none',
-      })
-    } else {
-      setStyle({
         transform: DEFAULT_TRANSFORM,
-        transition: 'none',
+        transition: FLATTEN,
       })
     }
   }, [isDisabled])
@@ -84,8 +79,8 @@ export default function TiltCard({ children, className = '', disabled: disabledP
         className={className}
         style={{
           ...style,
-          transformStyle: isDisabled ? 'flat' : 'preserve-3d',
-          willChange: isDisabled ? 'auto' : 'transform',
+          transformStyle: 'preserve-3d',
+          willChange: 'transform',
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}

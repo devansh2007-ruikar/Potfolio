@@ -1,22 +1,33 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, LayoutGroup } from 'framer-motion'
 import { projects } from '../data/projects'
 import CaseFileOverlay from './CaseFileOverlay'
 import { useTilt } from '../context/TiltContext'
 
 const springTransition = { type: 'spring', stiffness: 300, damping: 34, mass: 0.9 }
+const FLATTEN_MS = 230
 
-export default function ProjectsCard() {
+export default function ProjectsCard({ onViewAll }) {
   const [selectedId, setSelectedId] = useState(null)
   const { setDisabled } = useTilt()
 
+  const flatSince = useRef(0)
+  const hovering = useRef(false)
+
   function openCase(id) {
-    setDisabled?.(true)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
+    const now = performance.now()
+    if (flatSince.current === 0) {
+      setDisabled?.(true)
+      flatSince.current = now
+    }
+    const wait = Math.max(0, FLATTEN_MS - (now - flatSince.current))
+    if (wait === 0) {
+      setSelectedId(id)
+    } else {
+      setTimeout(() => {
         setSelectedId(id)
-      })
-    })
+      }, wait)
+    }
   }
 
   return (
@@ -41,14 +52,33 @@ export default function ProjectsCard() {
               </h3>
             </div>
 
-            <div className="text-[10px] font-mono text-zinc-400 bg-white/[0.04] px-2.5 py-1 rounded-lg border border-white/[0.08]">
-              CASE ARCHIVES
-            </div>
+            <button
+              type="button"
+              onClick={onViewAll}
+              className="group/btn text-[10px] font-mono text-zinc-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] px-2.5 py-1 rounded-lg border border-white/[0.08] transition-colors cursor-pointer flex items-center gap-1.5"
+            >
+              <span>VIEW ALL</span>
+              <span className="transition-transform group-hover/btn:translate-x-0.5">→</span>
+            </button>
           </div>
         </div>
 
         {/* Compact Project Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 my-auto flex-1">
+        <div
+          onPointerEnter={() => {
+            hovering.current = true
+            setDisabled?.(true)
+            flatSince.current = performance.now()
+          }}
+          onPointerLeave={() => {
+            hovering.current = false
+            if (!selectedId) {
+              setDisabled?.(false)
+              flatSince.current = 0
+            }
+          }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-3.5 my-auto flex-1"
+        >
           {projects.map((p) => (
             <motion.div
               key={p.id}
@@ -121,7 +151,12 @@ export default function ProjectsCard() {
       <CaseFileOverlay
         selectedId={selectedId}
         onClose={() => setSelectedId(null)}
-        onExitComplete={() => setDisabled?.(false)}
+        onExitComplete={() => {
+          if (!hovering.current) {
+            setDisabled?.(false)
+            flatSince.current = 0
+          }
+        }}
       />
     </LayoutGroup>
   )
