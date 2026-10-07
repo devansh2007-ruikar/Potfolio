@@ -32,19 +32,30 @@ const cardVariants = {
 
 export default function App() {
   const [view, setView] = useState('Dashboard')
+  const [introActive, setIntroActive] = useState(false)
 
   function changeView(next) {
     setView(next)
+    if (next !== 'About Me') setIntroActive(false)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const isIntroOnScreen = view === 'About Me' && introActive
+
   return (
-    <div className="dot-grid-bg min-h-screen relative">
-      <InteractiveDotGrid />
-      <InkCursorTrail />
+    <div className={`${isIntroOnScreen ? 'bg-black' : 'dot-grid-bg'} min-h-screen relative`}>
+      {!isIntroOnScreen && <InteractiveDotGrid />}
+      {!isIntroOnScreen && <InkCursorTrail />}
       <Header activeNav={view} onNavChange={changeView} />
 
-      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-28 pb-12 relative" style={{ zIndex: 2 }}>
+      <main
+        className={`${
+          view === 'About Me'
+            ? 'w-full relative'
+            : 'max-w-[1400px] mx-auto px-4 sm:px-6 pt-28 pb-12 relative'
+        }`}
+        style={{ zIndex: 2 }}
+      >
         <AnimatePresence mode="wait">
           {view === 'Projects' ? (
             <motion.div
@@ -78,7 +89,10 @@ export default function App() {
                 transition: { duration: 0.2 },
               }}
             >
-              <AboutPage onViewWork={() => changeView('Projects')} />
+              <AboutPage
+                onViewWork={() => changeView('Projects')}
+                onIntroActiveChange={setIntroActive}
+              />
             </motion.div>
           ) : (
             <motion.div

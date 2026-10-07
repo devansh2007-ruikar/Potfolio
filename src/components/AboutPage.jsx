@@ -8,6 +8,7 @@ import {
 } from 'framer-motion'
 import DecryptText from './DecryptText'
 import meImg from '../assets/me.jpg'
+import AboutIntro from './about-intro/AboutIntro'
 
 const pageContainerVariants = {
   hidden: {},
@@ -201,10 +202,14 @@ const tagItemVariants = {
   },
 }
 
-export default function AboutPage({ onViewWork }) {
+export default function AboutPage({ onViewWork, onIntroActiveChange }) {
   const shouldReduceMotion = useReducedMotion()
   const [photoTilt, setPhotoTilt] = useState({ rotateX: 0, rotateY: 0 })
   const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [])
 
   const handlePhotoMouseMove = (e) => {
     if (shouldReduceMotion) return
@@ -227,12 +232,17 @@ export default function AboutPage({ onViewWork }) {
   }
 
   return (
-    <motion.div
-      variants={pageContainerVariants}
-      initial="hidden"
-      animate="visible"
-      className="grid grid-cols-1 lg:grid-cols-3 gap-5"
-    >
+    <div className="w-full">
+      <AboutIntro onIntroActiveChange={onIntroActiveChange} />
+
+      <div id="about-bento" className="max-w-[1400px] mx-auto px-4 sm:px-6 py-12 relative">
+        <motion.div
+          variants={pageContainerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-5"
+        >
       {/* CARD 1 – Intro (lg:col-span-2, min-h 420px) */}
       <motion.div
         variants={cardItemVariants}
@@ -634,5 +644,7 @@ export default function AboutPage({ onViewWork }) {
         </div>
       </motion.div>
     </motion.div>
+  </div>
+</div>
   )
 }
