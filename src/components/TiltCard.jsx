@@ -1,14 +1,5 @@
-import { createContext, useContext, useRef, useState, useEffect } from 'react'
-
-export const TiltContext = createContext({
-  disabled: false,
-  setDisabled: () => {},
-  resetTilt: () => {},
-})
-
-export function useTilt() {
-  return useContext(TiltContext)
-}
+import { useRef, useState, useEffect } from 'react'
+import { TiltContext } from '../context/TiltContext'
 
 const TILT_MAX = 12 // max degrees of rotation
 const SCALE = 1.02
@@ -29,15 +20,24 @@ export default function TiltCard({ children, className = '', disabled: disabledP
 
   function resetTilt() {
     setStyle({
-      transform: 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale3d(1,1,1)',
-      transition: TRANSITION_OUT,
+      transform: isDisabled ? 'none' : DEFAULT_TRANSFORM,
+      transition: 'none',
     })
   }
 
-  // When disabled changes, reset tilt transform
+  // When disabled, immediately set { transform: 'none', transition: 'none' }
+  // When re-enabled, set the default transform with transition: 'none'
   useEffect(() => {
     if (isDisabled) {
-      resetTilt()
+      setStyle({
+        transform: 'none',
+        transition: 'none',
+      })
+    } else {
+      setStyle({
+        transform: DEFAULT_TRANSFORM,
+        transition: 'none',
+      })
     }
   }, [isDisabled])
 
@@ -66,7 +66,7 @@ export default function TiltCard({ children, className = '', disabled: disabledP
   function handleMouseLeave() {
     if (isDisabled) return
     setStyle({
-      transform: 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale3d(1,1,1)',
+      transform: DEFAULT_TRANSFORM,
       transition: TRANSITION_OUT,
     })
   }
@@ -84,8 +84,8 @@ export default function TiltCard({ children, className = '', disabled: disabledP
         className={className}
         style={{
           ...style,
-          transformStyle: 'preserve-3d',
-          willChange: 'transform',
+          transformStyle: isDisabled ? 'flat' : 'preserve-3d',
+          willChange: isDisabled ? 'auto' : 'transform',
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}

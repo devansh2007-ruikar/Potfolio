@@ -1,24 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, LayoutGroup } from 'framer-motion'
 import { projects } from '../data/projects'
 import CaseFileOverlay from './CaseFileOverlay'
-import { useTilt } from './TiltCard'
+import { useTilt } from '../context/TiltContext'
 
-const springTransition = { type: 'spring', stiffness: 260, damping: 30 }
+const springTransition = { type: 'spring', stiffness: 300, damping: 34, mass: 0.9 }
 
 export default function ProjectsCard() {
   const [selectedId, setSelectedId] = useState(null)
-  const { setDisabled, resetTilt } = useTilt()
+  const { setDisabled } = useTilt()
 
-  // Disable TiltCard effect on Projects card while overlay is open
-  useEffect(() => {
-    if (selectedId) {
-      setDisabled?.(true)
-      resetTilt?.()
-    } else {
-      setDisabled?.(false)
-    }
-  }, [selectedId, setDisabled, resetTilt])
+  function openCase(id) {
+    setDisabled?.(true)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setSelectedId(id)
+      })
+    })
+  }
 
   return (
     <LayoutGroup id="case-files">
@@ -55,8 +54,9 @@ export default function ProjectsCard() {
               key={p.id}
               layoutId={`case-${p.id}`}
               transition={springTransition}
-              onClick={() => setSelectedId(p.id)}
-              className="group/card relative bg-black [background-image:radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:16px_16px] border border-white/10 rounded-2xl p-4 flex flex-col justify-between cursor-pointer hover:border-violet-500/40 hover:shadow-[0_0_25px_rgba(167,139,250,0.15)] transition-all duration-300 min-h-[170px]"
+              onClick={() => openCase(p.id)}
+              style={{ borderRadius: 16 }}
+              className="group/card relative bg-black [background-image:radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:16px_16px] border border-white/10 p-4 flex flex-col justify-between cursor-pointer hover:border-violet-500/40 hover:shadow-[0_0_25px_rgba(167,139,250,0.15)] transition-[border-color,box-shadow] duration-300 min-h-[170px]"
             >
               <div>
                 {/* Case ID & Badge */}
@@ -71,10 +71,9 @@ export default function ProjectsCard() {
                   </span>
                 </div>
 
-                {/* Title in bold white with layoutId */}
+                {/* Title in bold white with layout="position" */}
                 <motion.h4
-                  layoutId={`case-title-${p.id}`}
-                  transition={springTransition}
+                  layout="position"
                   className="text-base font-bold text-white group-hover/card:text-violet-200 transition-colors"
                 >
                   {p.title}
@@ -122,6 +121,7 @@ export default function ProjectsCard() {
       <CaseFileOverlay
         selectedId={selectedId}
         onClose={() => setSelectedId(null)}
+        onExitComplete={() => setDisabled?.(false)}
       />
     </LayoutGroup>
   )
