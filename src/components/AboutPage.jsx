@@ -169,22 +169,17 @@ const toolboxGroups = [
   {
     category: 'Languages',
     accent: '#f59e0b',
-    tech: ['Java', 'Python', 'JavaScript', 'TypeScript', 'C++', 'SQL'],
+    tech: ['Java', 'Python'],
   },
   {
     category: 'Backend',
     accent: '#10b981',
-    tech: ['Spring Boot', 'Node.js', 'Express', 'REST APIs', 'PostgreSQL', 'MongoDB'],
-  },
-  {
-    category: 'Frontend',
-    accent: '#a78bfa',
-    tech: ['React', 'Three.js', 'Tailwind CSS', 'Framer Motion', 'Next.js', 'WebGL'],
+    tech: ['Spring Boot', 'MySQL'],
   },
   {
     category: 'Tools',
     accent: '#38bdf8',
-    tech: ['Git', 'Docker', 'Linux', 'Postman', 'Streamlit', 'Vite'],
+    tech: ['Git', 'Linux'],
   },
 ]
 

@@ -1,21 +1,42 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion'
+import { fetchLeetCodeStats } from '../lib/leetcode.js'
 
-const USERNAME = 'devanshruikar2007'
-const SOLVED_API = `https://alfa-leetcode-api.onrender.com/${USERNAME}/solved`
-const PROFILE_API = `https://alfa-leetcode-api.onrender.com/${USERNAME}`
+const CACHE_KEY = 'lc-stats'
 
-/* Fallback data in case the API is slow / down */
-const FALLBACK = {
-  totalSolved: 14,
-  easySolved: 4,
-  mediumSolved: 7,
-  hardSolved: 3,
-  totalEasy: 867,
-  totalMedium: 1822,
-  totalHard: 793,
-  acceptanceRate: 44.4,
-  ranking: 5000001,
+function getCachedStats() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY)
+    if (!raw) return null
+    return JSON.parse(raw)
+  } catch {
+    return null
+  }
+}
+
+function saveCachedStats(stats) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(stats))
+  } catch {
+    // Ignore storage quota/disabled errors
+  }
+}
+
+function formatTimeAgo(updatedAt) {
+  if (!updatedAt) return ''
+  const diffSec = Math.max(0, Math.floor((Date.now() - new Date(updatedAt).getTime()) / 1000))
+  if (diffSec < 60) return `${diffSec}s ago`
+  const diffMin = Math.floor(diffSec / 60)
+  if (diffMin < 60) return `${diffMin}m ago`
+  const diffHr = Math.floor(diffMin / 60)
+  return `${diffHr}h ago`
+}
+
+function formatCachedLabel(updatedAt) {
+  if (!updatedAt) return 'cached'
+  const diffMs = Date.now() - new Date(updatedAt).getTime()
+  const diffMin = Math.max(1, Math.floor(diffMs / 60000))
+  return `cached · ${diffMin} min ago`
 }
 
 const DIFFICULTY = [
@@ -102,67 +123,94 @@ function LeetCodeIcon() {
 
 /* ─── Main Component ─── */
 export default function LeetCodeStats() {
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState(getCachedStats)
+  const [loading, setLoading] = useState(() => !getCachedStats())
+  const [hasError, setHasError] = useState(false)
+  const [fetchFailed, setFetchFailed] = useState(false)
+  const [, setTicker] = useState(0)
 
+  const isFetchingRef = useRef(false)
+  const countMotion = useMotionValue(0)
+  const [displayCount, setDisplayCount] = useState(0)
+
+  // Count-up animation from old value to new value
   useEffect(() => {
-    let cancelled = false
-    const controller = new AbortController()
+    if (data?.totalSolved != null) {
+      const controls = animate(countMotion, data.totalSolved, {
+        duration: 1.2,
+        ease: [0.22, 1, 0.36, 1],
+        onUpdate: (latest) => {
+          setDisplayCount(Math.round(latest))
+        },
+      })
+      return () => controls.stop()
+    }
+  }, [data?.totalSolved, countMotion])
 
-    async function fetchStats() {
-      try {
-        // Fetch solved stats and profile in parallel
-        const [solvedRes, profileRes] = await Promise.all([
-          fetch(SOLVED_API, { signal: controller.signal }),
-          fetch(PROFILE_API, { signal: controller.signal }),
-        ])
+  // Periodic ticker for relative time ("Updated Xs ago")
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTicker((t) => t + 1)
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
 
-        if (!solvedRes.ok || !profileRes.ok) throw new Error('API error')
+  const loadStats = useCallback(async (isRetry = false) => {
+    if (isFetchingRef.current && !isRetry) return
+    isFetchingRef.current = true
 
-        const [solved, profile] = await Promise.all([
-          solvedRes.json(),
-          profileRes.json(),
-        ])
-
-        // Calculate acceptance rate from submission data
-        const allSubmissions = solved.totalSubmissionNum?.find(s => s.difficulty === 'All')
-        const allAccepted = solved.acSubmissionNum?.find(s => s.difficulty === 'All')
-        const acceptanceRate = allSubmissions?.submissions > 0
-          ? ((allAccepted?.submissions || 0) / allSubmissions.submissions * 100)
-          : FALLBACK.acceptanceRate
-
-        if (!cancelled) {
-          setData({
-            totalSolved: solved.solvedProblem ?? FALLBACK.totalSolved,
-            easySolved: solved.easySolved ?? FALLBACK.easySolved,
-            mediumSolved: solved.mediumSolved ?? FALLBACK.mediumSolved,
-            hardSolved: solved.hardSolved ?? FALLBACK.hardSolved,
-            totalEasy: FALLBACK.totalEasy,
-            totalMedium: FALLBACK.totalMedium,
-            totalHard: FALLBACK.totalHard,
-            acceptanceRate: Math.round(acceptanceRate * 10) / 10,
-            ranking: profile.ranking ?? FALLBACK.ranking,
-          })
-          setLoading(false)
-        }
-      } catch {
-        // On any failure, use fallback data so the widget always renders
-        if (!cancelled) {
-          setData(FALLBACK)
-          setLoading(false)
-        }
-      }
+    if (isRetry) {
+      setLoading(true)
+      setHasError(false)
     }
 
-    fetchStats()
-    return () => {
-      cancelled = true
-      controller.abort()
+    try {
+      const freshData = await fetchLeetCodeStats()
+      saveCachedStats(freshData)
+      setData(freshData)
+      setFetchFailed(false)
+      setHasError(false)
+    } catch (err) {
+      console.error('LeetCode fetch error:', err)
+      setFetchFailed(true)
+      setData((prev) => {
+        if (!prev) {
+          setHasError(true)
+        }
+        return prev
+      })
+    } finally {
+      setLoading(false)
+      isFetchingRef.current = false
     }
   }, [])
 
-  /* ── Loading State ── */
-  if (loading) {
+  // Auto-refresh every 5 minutes while visible + refetch on tab visibility change
+  useEffect(() => {
+    loadStats()
+
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        loadStats()
+      }
+    }, 5 * 60 * 1000)
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        loadStats()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [loadStats])
+
+  /* ── Loading State (when no cache exists) ── */
+  if (loading && !data) {
     return (
       <div className="bento-card h-full min-h-[420px]">
         <SkeletonLoader />
@@ -170,17 +218,75 @@ export default function LeetCodeStats() {
     )
   }
 
-  /* ── Data Loaded ── */
-  const { totalSolved, acceptanceRate, ranking } = data
+  /* ── Error State (when fetch failed and no cache exists) ── */
+  if (hasError && !data) {
+    return (
+      <div className="bento-card h-full min-h-[420px] flex flex-col p-6">
+        <div className="flex items-center gap-2">
+          <LeetCodeIcon />
+          <span className="text-[10px] font-semibold tracking-[0.25em] text-gray-400 uppercase">
+            LeetCode Stats
+          </span>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center text-center p-4 gap-3">
+          <div className="w-10 h-10 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium text-gray-300">Couldn't reach LeetCode</p>
+          <p className="text-xs text-gray-500 max-w-[220px]">
+            Unable to fetch live statistics at the moment.
+          </p>
+          <button
+            onClick={() => loadStats(true)}
+            className="mt-2 px-4 py-1.5 text-xs font-mono rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/10 transition-colors cursor-pointer"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  /* ── Data Loaded (or Cached) ── */
+  const { acceptanceRate, ranking, updatedAt } = data
+  const timeAgo = formatTimeAgo(updatedAt)
 
   return (
     <div className="bento-card h-full min-h-[420px] flex flex-col p-6">
       {/* Header */}
-      <div className="flex items-center gap-2">
-        <LeetCodeIcon />
-        <span className="text-[10px] font-semibold tracking-[0.25em] text-gray-400 uppercase">
-          LeetCode Stats
-        </span>
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex items-center gap-2">
+          <LeetCodeIcon />
+          <span className="text-[10px] font-semibold tracking-[0.25em] text-gray-400 uppercase">
+            LeetCode Stats
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {fetchFailed ? (
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[10px] font-mono text-amber-400">
+              <span className="inline-flex rounded-full h-1.5 w-1.5 bg-amber-400" />
+              <span>{formatCachedLabel(updatedAt)}</span>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono text-emerald-400">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                </span>
+                <span className="font-semibold tracking-wider">LIVE</span>
+              </div>
+              {timeAgo && (
+                <span className="text-[10px] text-gray-500 font-mono">
+                  Updated {timeAgo}
+                </span>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       {/* Main Stat */}
@@ -197,7 +303,7 @@ export default function LeetCodeStats() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           >
-            {totalSolved}
+            {displayCount}
           </motion.span>
           <span className="text-xs text-gray-500 mt-2 tracking-wide">
             Total Questions Solved
@@ -241,8 +347,8 @@ export default function LeetCodeStats() {
           <ProgressBar
             key={d.key}
             label={d.label}
-            solved={data[d.solvedKey]}
-            total={data[d.totalKey]}
+            solved={data[d.solvedKey] ?? 0}
+            total={data[d.totalKey] ?? 0}
             color={d.color}
             delay={0.5 + i * 0.15}
           />

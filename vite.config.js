@@ -7,5 +7,15 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    proxy: {
+      '/lc-graphql': {
+        target: 'https://leetcode.com',
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/lc-graphql/, '/graphql'),
+        headers: {
+          Referer: 'https://leetcode.com',
+        },
+      },
+    },
   },
 })
