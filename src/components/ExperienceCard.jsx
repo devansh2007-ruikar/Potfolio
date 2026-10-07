@@ -33,14 +33,14 @@ export default function ExperienceCard() {
   const currentExp = experiences.find((e) => e.id === activeId) || experiences[0]
 
   return (
-    <div className="bento-card h-full min-h-[420px] flex flex-col justify-between p-6 relative overflow-hidden group">
+    <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
       {/* Background ambient glow */}
       <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/20 transition-all duration-500" />
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-orange-500/10 rounded-full blur-2xl pointer-events-none" />
 
       {/* Top Header */}
       <div>
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-3 lg:mb-1.5 [@media(max-height:760px)]:mb-1">
           <div className="flex items-center gap-2">
             <span className="flex h-2 w-2 rounded-full bg-amber-400" />
             <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
@@ -52,7 +52,7 @@ export default function ExperienceCard() {
           </span>
         </div>
 
-        <h3 className="text-xl font-bold text-white tracking-tight">
+        <h3 className="text-xl lg:text-lg [@media(max-height:760px)]:text-base font-bold text-white tracking-tight">
           Experience
         </h3>
         <p className="text-xs text-zinc-400 mt-0.5">
@@ -61,7 +61,7 @@ export default function ExperienceCard() {
       </div>
 
       {/* Experience Selector Tabs */}
-      <div className="my-3 flex gap-1.5 p-1 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+      <div className="my-2.5 lg:my-1.5 [@media(max-height:760px)]:my-1 flex gap-1.5 p-1 rounded-xl bg-white/[0.04] border border-white/[0.08]">
         {experiences.map((exp) => (
           <button
             key={exp.id}
@@ -78,13 +78,13 @@ export default function ExperienceCard() {
       </div>
 
       {/* Active Experience Details Container - Scrollable Block */}
-      <div className="flex-1 overflow-y-auto max-h-[195px] pr-2 my-1">
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar max-h-[195px] lg:max-h-none pr-1 my-1">
         <motion.div
           key={currentExp.id}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
-          className="space-y-2.5"
+          className="space-y-2 lg:space-y-1.5 [@media(max-height:760px)]:space-y-1"
         >
           <div>
             <div className="flex items-center justify-between gap-1">
@@ -100,7 +100,7 @@ export default function ExperienceCard() {
             </p>
           </div>
 
-          <ul className="space-y-1.5">
+          <ul className="space-y-1.5 lg:space-y-1 [@media(max-height:760px)]:space-y-0.5">
             {currentExp.bullets.map((bullet, idx) => (
               <li
                 key={idx}
@@ -126,7 +126,7 @@ export default function ExperienceCard() {
       </div>
 
       {/* Footer bar */}
-      <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs text-zinc-500">
+      <div className="pt-2.5 lg:pt-1.5 [@media(max-height:760px)]:pt-1 border-t border-white/[0.08] flex items-center justify-between text-xs text-zinc-500">
         <span className="text-[11px] font-mono">Status: {currentExp.status}</span>
         <span className="text-[11px] font-mono text-amber-400/90">
           Verified Resume Entry

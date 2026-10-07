@@ -76,7 +76,7 @@ export default function TiltCard({ children, className = '', disabled: disabledP
     >
       <div
         ref={cardRef}
-        className={className}
+        className={`h-full min-h-0 ${className}`}
         style={{
           ...style,
           transformStyle: 'preserve-3d',

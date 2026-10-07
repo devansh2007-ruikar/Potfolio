@@ -30,13 +30,13 @@ export default function SkillsCard() {
   const [activeTab, setActiveTab] = useState('Backend')
 
   return (
-    <div className="bento-card h-full min-h-[420px] flex flex-col justify-between p-6 relative overflow-hidden">
+    <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header & Category Switcher */}
-      <div>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+      <div className="flex-1 min-h-0 flex flex-col">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 lg:mb-2 [@media(max-height:760px)]:mb-1.5">
           <div>
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-violet-400" />
@@ -44,7 +44,7 @@ export default function SkillsCard() {
                 Technical Stack
               </span>
             </div>
-            <h3 className="text-lg font-bold text-white mt-1">Core Proficiencies</h3>
+            <h3 className="text-lg lg:text-base font-bold text-white mt-1">Core Proficiencies</h3>
           </div>
 
           {/* Category Tabs (without Frontend) */}
@@ -53,7 +53,7 @@ export default function SkillsCard() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`relative px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+                className={`relative px-3 py-1.5 lg:py-1 text-xs font-medium rounded-lg transition-all cursor-pointer ${
                   activeTab === tab
                     ? 'text-white'
                     : 'text-zinc-400 hover:text-zinc-200'
@@ -73,7 +73,7 @@ export default function SkillsCard() {
         </div>
 
         {/* Scrollable Skill Bars Block with Animated Fill */}
-        <div className="my-2 overflow-y-auto max-h-[175px] pr-2">
+        <div className="my-1 flex-1 min-h-0 overflow-y-auto no-scrollbar max-h-[175px] lg:max-h-none pr-1">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -81,7 +81,7 @@ export default function SkillsCard() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="space-y-3"
+              className="space-y-3 lg:space-y-2 [@media(max-height:760px)]:space-y-1.5"
             >
               {skillCategories[activeTab].map((skill, index) => (
                 <div key={skill.name} className="group">
@@ -112,9 +112,9 @@ export default function SkillsCard() {
       </div>
 
       {/* Bottom Pills */}
-      <div className="pt-3 border-t border-white/[0.08]">
-        <div className="text-[11px] text-zinc-400 mb-2 font-medium">Quick Tags:</div>
-        <div className="flex flex-wrap gap-1.5">
+      <div className="pt-3 lg:pt-2 [@media(max-height:760px)]:pt-1.5 border-t border-white/[0.08]">
+        <div className="text-[11px] text-zinc-400 mb-2 lg:mb-1 font-medium">Quick Tags:</div>
+        <div className="flex flex-wrap gap-1.5 lg:gap-1">
           {quickPills.map((pill) => (
             <span
               key={pill}

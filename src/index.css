@@ -30,6 +30,23 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Scroll Lock for Desktop Dashboard */
+html.no-scroll,
+html.no-scroll body {
+  overflow: hidden;
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 body {
   margin: 0;
   padding: 0;

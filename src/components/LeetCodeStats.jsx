@@ -212,7 +212,7 @@ export default function LeetCodeStats() {
   /* ── Loading State (when no cache exists) ── */
   if (loading && !data) {
     return (
-      <div className="bento-card h-full min-h-[420px]">
+      <div className="bento-card h-full min-h-[420px] lg:min-h-0">
         <SkeletonLoader />
       </div>
     )
@@ -221,7 +221,7 @@ export default function LeetCodeStats() {
   /* ── Error State (when fetch failed and no cache exists) ── */
   if (hasError && !data) {
     return (
-      <div className="bento-card h-full min-h-[420px] flex flex-col p-6">
+      <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col p-6 lg:p-4 [@media(max-height:760px)]:p-3.5">
         <div className="flex items-center gap-2">
           <LeetCodeIcon />
           <span className="text-[10px] font-semibold tracking-[0.25em] text-gray-400 uppercase">
@@ -254,7 +254,7 @@ export default function LeetCodeStats() {
   const timeAgo = formatTimeAgo(updatedAt)
 
   return (
-    <div className="bento-card h-full min-h-[420px] flex flex-col p-6">
+    <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2">
@@ -275,7 +275,7 @@ export default function LeetCodeStats() {
               <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono text-emerald-400">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
                 </span>
                 <span className="font-semibold tracking-wider">LIVE</span>
               </div>
@@ -292,20 +292,20 @@ export default function LeetCodeStats() {
       {/* Main Stat */}
       <AnimatePresence>
         <motion.div
-          className="flex-1 flex flex-col items-center justify-center"
+          className="flex-1 flex flex-col items-center justify-center my-1"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           <motion.span
-            className="text-6xl font-extrabold text-white tabular-nums leading-none"
+            className="text-6xl lg:text-5xl [@media(max-height:760px)]:text-4xl font-extrabold text-white tabular-nums leading-none"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           >
             {displayCount}
           </motion.span>
-          <span className="text-xs text-gray-500 mt-2 tracking-wide">
+          <span className="text-xs text-gray-500 mt-1.5 lg:mt-1 tracking-wide">
             Total Questions Solved
           </span>
         </motion.div>
@@ -313,20 +313,20 @@ export default function LeetCodeStats() {
 
       {/* Secondary Stats Row */}
       <motion.div
-        className="flex items-center justify-center gap-3 mb-5"
+        className="flex items-center justify-center gap-3 mb-5 lg:mb-2.5 [@media(max-height:760px)]:mb-1.5"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}
       >
         <div
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs"
+          className="flex items-center gap-1.5 px-3 py-1.5 lg:py-1 rounded-full text-xs"
           style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
         >
           <span className="text-gray-400">Acceptance</span>
           <span className="font-semibold text-white">{acceptanceRate}%</span>
         </div>
         <div
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs"
+          className="flex items-center gap-1.5 px-3 py-1.5 lg:py-1 rounded-full text-xs"
           style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
         >
           <span className="text-gray-400">Rank</span>
@@ -338,7 +338,7 @@ export default function LeetCodeStats() {
 
       {/* Progress Bars */}
       <motion.div
-        className="flex flex-col gap-3"
+        className="flex flex-col gap-3 lg:gap-2 [@media(max-height:760px)]:gap-1.5"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
