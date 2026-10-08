@@ -36,10 +36,12 @@ function BaseWord({ word, index, total, p, shouldReduceMotion }) {
     return 'none'
   })
 
+  const marginClass = index === total - 1 ? 'mr-0' : 'mr-[0.25em]'
+
   if (shouldReduceMotion) {
     return (
       <span
-        className={`inline-block mr-[0.25em] ${colorClass}`}
+        className={`inline-block ${marginClass} ${colorClass}`}
         style={
           isViolet
             ? { textShadow: '0 0 20px rgba(167, 139, 250, 0.6)' }
@@ -59,18 +61,20 @@ function BaseWord({ word, index, total, p, shouldReduceMotion }) {
         opacity,
         textShadow: isViolet || isAmber ? textShadow : undefined,
       }}
-      className={`inline-block mr-[0.25em] will-change-[opacity] ${colorClass}`}
+      className={`inline-block ${marginClass} ${colorClass}`}
     >
       {word}
     </motion.span>
   )
 }
 
-function LitWord({ word }) {
+function LitWord({ word, index, total }) {
   const { isViolet, isAmber, colorClass } = getWordStyle(word)
+  const marginClass = index === total - 1 ? 'mr-0' : 'mr-[0.25em]'
+
   return (
     <span
-      className={`inline-block mr-[0.25em] ${colorClass}`}
+      className={`inline-block ${marginClass} ${colorClass}`}
       style={
         isViolet
           ? { textShadow: '0 0 22px rgba(167, 139, 250, 0.65)' }
@@ -86,6 +90,7 @@ function LitWord({ word }) {
 
 export default function SceneManifesto({ p, shouldReduceMotion }) {
   const containerRef = useRef(null)
+  const flashlightRef = useRef(null)
 
   // 0.34→0.38 enter, 0.56→0.60 exit
   const sceneOpacity = useTransform(p, [0.34, 0.38, 0.56, 0.6], [0, 1, 1, 0])
@@ -97,12 +102,19 @@ export default function SceneManifesto({ p, shouldReduceMotion }) {
     const rect = containerRef.current.getBoundingClientRect()
     containerRef.current.style.setProperty('--mx', `${e.clientX - rect.left}px`)
     containerRef.current.style.setProperty('--my', `${e.clientY - rect.top}px`)
+    if (flashlightRef.current) {
+      flashlightRef.current.style.opacity = '1'
+    }
   }
 
   const handlePointerLeave = () => {
-    if (!containerRef.current) return
-    containerRef.current.style.setProperty('--mx', '-1000px')
-    containerRef.current.style.setProperty('--my', '-1000px')
+    if (containerRef.current) {
+      containerRef.current.style.setProperty('--mx', '-1000px')
+      containerRef.current.style.setProperty('--my', '-1000px')
+    }
+    if (flashlightRef.current) {
+      flashlightRef.current.style.opacity = '0'
+    }
   }
 
   return (
@@ -127,14 +139,14 @@ export default function SceneManifesto({ p, shouldReduceMotion }) {
         ref={containerRef}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
-        className="relative max-w-4xl mx-auto my-auto text-2xl sm:text-4xl md:text-5xl font-semibold leading-tight text-center px-4"
+        className="grid max-w-4xl mx-auto my-auto text-2xl sm:text-4xl md:text-5xl font-semibold leading-tight text-center px-4"
         style={{
           '--mx': '-1000px',
           '--my': '-1000px',
         }}
       >
         {/* Base Layer (Words brighten as user scrolls) */}
-        <p className="select-text">
+        <p className="[grid-area:1/1] m-0">
           {words.map((w, idx) => (
             <BaseWord
               key={idx}
@@ -150,18 +162,20 @@ export default function SceneManifesto({ p, shouldReduceMotion }) {
         {/* Flashlight Reveal Layer (Shows 100% lit words inside a 220px circle around cursor) */}
         {!shouldReduceMotion && (
           <div
+            ref={flashlightRef}
             aria-hidden="true"
-            className="absolute inset-0 pointer-events-none select-none hidden md:block"
+            className="[grid-area:1/1] pointer-events-none select-none hidden md:block"
             style={{
+              opacity: 0,
               maskImage:
                 'radial-gradient(circle 220px at var(--mx, -1000px) var(--my, -1000px), black 0%, black 140px, transparent 220px)',
               WebkitMaskImage:
                 'radial-gradient(circle 220px at var(--mx, -1000px) var(--my, -1000px), black 0%, black 140px, transparent 220px)',
             }}
           >
-            <p>
+            <p className="[grid-area:1/1] m-0">
               {words.map((w, idx) => (
-                <LitWord key={idx} word={w} />
+                <LitWord key={idx} word={w} index={idx} total={words.length} />
               ))}
             </p>
           </div>
