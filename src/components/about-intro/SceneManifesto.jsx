@@ -2,20 +2,24 @@ import { useRef } from 'react'
 import { motion, useTransform } from 'framer-motion'
 
 const MANIFESTO_TEXT =
-  "I'm a computer science student who builds things that are fast under the hood and feel great on the surface. I love backend systems, interactive 3D web, and turning messy data into answers — like tracing crypto fraud for Smart India Hackathon."
+  "I'm a computer science student who builds things that are fast under the hood and feel great on the surface. I'm a problem solver at heart — I love breaking hard problems down to their core, thinking them through clearly, and turning them into creative, simple solutions."
 
 const words = MANIFESTO_TEXT.split(' ')
 
-function getWordStyle(word) {
-  const clean = word.toLowerCase().replace(/[^\w]/g, '')
-  const isViolet =
-    clean === 'backend' || clean === 'systems' || clean === '3d' || clean === 'web'
-  const isAmber =
-    clean === 'crypto' ||
-    clean === 'fraud' ||
-    clean === 'smart' ||
-    clean === 'india' ||
-    clean === 'hackathon'
+const cleanWord = (w) => (w || '').toLowerCase().replace(/[^\w]/g, '')
+const cleanedWords = words.map(cleanWord)
+const problemSolverIndex = cleanedWords.findIndex(
+  (w, i) => w === 'problem' && cleanedWords[i + 1] === 'solver'
+)
+
+function getWordStyle(word, index) {
+  const clean = cleanWord(word)
+  const isProblemSolver =
+    problemSolverIndex !== -1 && (index === problemSolverIndex || index === problemSolverIndex + 1)
+  const isClearly = clean === 'clearly'
+  const isViolet = isProblemSolver || isClearly
+
+  const isAmber = clean === 'core' || clean === 'creative'
 
   if (isViolet) return { isViolet: true, isAmber: false, colorClass: 'text-[#a78bfa]' }
   if (isAmber) return { isViolet: false, isAmber: true, colorClass: 'text-[#f59e0b]' }
@@ -23,7 +27,7 @@ function getWordStyle(word) {
 }
 
 function BaseWord({ word, index, total, p, shouldReduceMotion }) {
-  const { isViolet, isAmber, colorClass } = getWordStyle(word)
+  const { isViolet, isAmber, colorClass } = getWordStyle(word, index)
   const start = 0.38 + (index / total) * 0.18
   const end = start + 0.018
 
@@ -69,7 +73,7 @@ function BaseWord({ word, index, total, p, shouldReduceMotion }) {
 }
 
 function LitWord({ word, index, total }) {
-  const { isViolet, isAmber, colorClass } = getWordStyle(word)
+  const { isViolet, isAmber, colorClass } = getWordStyle(word, index)
   const marginClass = index === total - 1 ? 'mr-0' : 'mr-[0.25em]'
 
   return (
