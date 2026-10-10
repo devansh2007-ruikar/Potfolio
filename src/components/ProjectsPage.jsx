@@ -3,6 +3,7 @@ import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { projects } from '../data/projects'
 import DecryptText from './DecryptText'
 import CaseFileOverlay from './CaseFileOverlay'
+import Footer from './Footer'
 
 const springTransition = { type: 'spring', stiffness: 300, damping: 34, mass: 0.9 }
 
@@ -291,6 +292,8 @@ export default function ProjectsPage() {
         onClose={() => setSelectedId(null)}
         layoutPrefix="case-page"
       />
+
+      <Footer />
     </LayoutGroup>
   )
 }

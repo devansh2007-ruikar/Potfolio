@@ -12,6 +12,7 @@ import ProjectsCard from './components/ProjectsCard'
 import GlobeCard from './components/GlobeCard'
 import ProjectsPage from './components/ProjectsPage'
 import AboutPage from './components/AboutPage'
+import Footer from './components/Footer'
 import { useMusic } from './context/useMusic'
 
 const containerVariants = {
@@ -194,6 +195,7 @@ export default function App() {
                   <TiltCard className="h-full min-h-0"><GlobeCard /></TiltCard>
                 </motion.div>
               </motion.div>
+              <Footer isDashboard />
             </motion.div>
           )}
         </AnimatePresence>

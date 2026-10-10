@@ -1,3 +1,5 @@
+import { links } from './links'
+
 export const projects = [
   {
     id: 'mithya',
@@ -17,7 +19,7 @@ export const projects = [
     ],
     tech: ['Python', 'Streamlit', 'Scikit-learn', 'NumPy', 'Pandas', 'NetworkX'],
     linkText: 'GitHub',
-    linkUrl: 'https://github.com',
+    linkUrl: links.mithya,
   },
   {
     id: '3d-web',

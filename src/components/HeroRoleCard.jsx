@@ -1,4 +1,6 @@
 
+import { links } from '../data/links'
+
 export default function HeroRoleCard() {
   return (
     <div className="bento-card h-full min-h-[420px] flex flex-col justify-between p-6 relative overflow-hidden group">
@@ -65,9 +67,9 @@ export default function HeroRoleCard() {
         </div>
 
         <a
-          href="https://github.com"
+          href={links.mithya}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="w-full py-2 flex items-center justify-center gap-1.5 rounded-xl bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white transition-colors cursor-pointer"
         >
           <span>Explore Architecture</span>

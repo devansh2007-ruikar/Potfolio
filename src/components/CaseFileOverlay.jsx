@@ -419,7 +419,7 @@ export default function CaseFileOverlay({
                         <a
                           href={project.linkUrl}
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           className="flex-1 py-2.5 px-4 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer border shadow-lg group/btn text-white hover:brightness-110"
                           style={{
                             borderColor:

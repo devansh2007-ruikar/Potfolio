@@ -1,3 +1,5 @@
+import { links } from '../data/links'
+
 export default function PortraitCard() {
   return (
     <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
@@ -59,23 +61,23 @@ export default function PortraitCard() {
         {/* Action / Social links */}
         <div className="pt-2 lg:pt-1.5 [@media(max-height:760px)]:pt-1 flex items-center gap-2">
           <a
-            href="https://github.com"
+            href={links.github}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="flex-1 py-1.5 text-center text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 transition-colors"
           >
             GitHub
           </a>
           <a
-            href="https://linkedin.com"
+            href={links.linkedin}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="flex-1 py-1.5 text-center text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 transition-colors"
           >
             LinkedIn
           </a>
           <a
-            href="mailto:devanshruikar2007@gmail.com"
+            href={`mailto:${links.email}`}
             className="px-3 py-1.5 text-center text-xs font-medium rounded-lg bg-violet-600/80 hover:bg-violet-600 text-white transition-colors"
           >
             Contact
