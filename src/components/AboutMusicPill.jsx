@@ -4,12 +4,19 @@ import { useMusic } from '../context/useMusic'
 
 /**
  * AboutMusicPill - Floating audio pill for the About Me page.
- * Displays "♪ NOW PLAYING · Shinigami" with animated equalizer bars,
- * 🔊/🔇 mute toggle, collapse button, and keyboard shortcut 'M'.
+ * Displays "NOW PLAYING · Shinigami" with animated equalizer bars and volume toggle,
+ * or muted hint ("Music muted · tap to unmute") when entering while muted.
  */
 export default function AboutMusicPill() {
-  const { isPlaying, isMuted, playRejected, toggleMute, unmuteAndPlay } = useMusic()
+  const { isPlaying, isMuted, showMutedHint, playRejected, toggleMute } = useMusic()
   const [isCollapsed, setIsCollapsed] = useState(false)
+
+  // Expand when hint appears or playback was blocked
+  useEffect(() => {
+    if (showMutedHint || playRejected) {
+      setIsCollapsed(false)
+    }
+  }, [showMutedHint, playRejected])
 
   // Keyboard shortcut: 'M' key toggles mute while on About Me (ignoring input fields)
   useEffect(() => {
@@ -30,6 +37,8 @@ export default function AboutMusicPill() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [toggleMute])
+
+  const isAudioActive = isPlaying && !isMuted
 
   return (
     <AnimatePresence>
@@ -57,63 +66,81 @@ export default function AboutMusicPill() {
           <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-white/15 bg-black/75 backdrop-blur-md shadow-2xl font-mono text-[11px]">
             {playRejected ? (
               /* Fallback when browser autoplay policy blocks unprompted audio */
-              <button
-                type="button"
-                onClick={unmuteAndPlay}
-                className="flex items-center gap-1.5 text-violet-300 hover:text-violet-100 transition-colors cursor-pointer"
-              >
-                <span className="text-xs text-violet-400">▶</span>
-                <span>Tap to play music</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={toggleMute}
+                  title="Tap to play music"
+                  className="flex items-center gap-1.5 text-violet-300 hover:text-violet-100 transition-colors cursor-pointer"
+                >
+                  <span className="text-xs text-violet-400">▶</span>
+                  <span>Tap to play music</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsCollapsed(true)}
+                  aria-label="Collapse music player"
+                  title="Collapse"
+                  className="text-zinc-500 hover:text-zinc-300 text-xs pl-0.5 cursor-pointer leading-none transition-colors"
+                >
+                  ‹
+                </button>
+              </div>
+            ) : showMutedHint ? (
+              /* 4s hint when user enters About Me while audio is muted */
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={toggleMute}
+                  title="Tap to unmute"
+                  className="flex items-center gap-1.5 text-amber-300 hover:text-amber-100 transition-colors cursor-pointer"
+                >
+                  <span className="text-xs">🔇</span>
+                  <span>Music muted · tap to unmute</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsCollapsed(true)}
+                  aria-label="Collapse music player"
+                  title="Collapse"
+                  className="text-zinc-500 hover:text-zinc-300 text-xs pl-0.5 cursor-pointer leading-none transition-colors"
+                >
+                  ‹
+                </button>
+              </div>
             ) : (
               /* Normal Playing / Muted state */
               <>
                 <button
                   type="button"
                   onClick={toggleMute}
-                  title={isMuted ? 'Unmute music (Press M)' : 'Mute music (Press M)'}
+                  title={isAudioActive ? 'Mute music (Press M)' : 'Unmute music (Press M)'}
                   className="flex items-center gap-2 text-zinc-300 hover:text-white transition-colors cursor-pointer tracking-wider"
                 >
                   <span className="text-violet-400 font-bold">♪</span>
                   <span>
-                    {isMuted ? 'MUTED · Shinigami' : 'NOW PLAYING · Shinigami'}
+                    {isAudioActive ? 'NOW PLAYING · Shinigami' : 'MUTED · Shinigami'}
                   </span>
 
-                  {/* 3 tiny violet equalizer bars */}
-                  <div className="flex items-end gap-[2px] h-3 ml-0.5 pointer-events-none">
-                    <span
-                      className={`w-[2px] rounded-full transition-all duration-300 ${
-                        isPlaying && !isMuted
-                          ? 'bg-violet-400 animate-eq-1'
-                          : 'bg-zinc-600 h-1.5'
-                      }`}
-                    />
-                    <span
-                      className={`w-[2px] rounded-full transition-all duration-300 ${
-                        isPlaying && !isMuted
-                          ? 'bg-violet-400 animate-eq-2'
-                          : 'bg-zinc-600 h-1.5'
-                      }`}
-                    />
-                    <span
-                      className={`w-[2px] rounded-full transition-all duration-300 ${
-                        isPlaying && !isMuted
-                          ? 'bg-violet-400 animate-eq-3'
-                          : 'bg-zinc-600 h-1.5'
-                      }`}
-                    />
-                  </div>
+                  {/* 3 tiny violet equalizer bars: only when isPlaying && !isMuted */}
+                  {isAudioActive && (
+                    <div className="flex items-end gap-[2px] h-3 ml-0.5 pointer-events-none">
+                      <span className="w-[2px] rounded-full bg-violet-400 animate-eq-1" />
+                      <span className="w-[2px] rounded-full bg-violet-400 animate-eq-2" />
+                      <span className="w-[2px] rounded-full bg-violet-400 animate-eq-3" />
+                    </div>
+                  )}
                 </button>
 
-                {/* Speaker icon button */}
+                {/* Speaker icon button: only shows speaker-on when isPlaying && !isMuted */}
                 <button
                   type="button"
                   onClick={toggleMute}
-                  aria-label={isMuted ? 'Unmute music' : 'Mute music'}
-                  title={isMuted ? 'Unmute music' : 'Mute music'}
+                  aria-label={isAudioActive ? 'Mute music' : 'Unmute music'}
+                  title={isAudioActive ? 'Mute music' : 'Unmute music'}
                   className="text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer px-1 py-0.5 rounded hover:bg-white/10"
                 >
-                  {isMuted ? '🔇' : '🔊'}
+                  {isAudioActive ? '🔊' : '🔇'}
                 </button>
 
                 {/* Collapse button */}

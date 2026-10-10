@@ -60,13 +60,11 @@ export default function App() {
     }
   }, [view])
 
-  const { startAboutMeMusic, leaveAboutMeMusic } = useMusic()
+  const { leaveAboutMe } = useMusic()
 
   function changeView(next) {
     if (view === 'About Me' && next !== 'About Me') {
-      leaveAboutMeMusic()
-    } else if (next === 'About Me' && view !== 'About Me') {
-      startAboutMeMusic()
+      leaveAboutMe()
     }
     setView(next)
     if (next !== 'About Me') setIntroActive(false)

@@ -6,7 +6,7 @@ import { useMusic } from '../context/useMusic'
 const navItems = ['Dashboard', 'Projects', 'About Me']
 
 export default function Header({ activeNav = 'Dashboard', onNavChange }) {
-  const { isPlaying, isMuted, toggleMute, startAboutMeMusic } = useMusic()
+  const { isPlaying, isMuted, toggleMute, enterAboutMe, warmUp } = useMusic()
   const [speed, setSpeed] = useState(0)
 
   // Cursor speed tracker
@@ -55,7 +55,7 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
 
   const handleNavClick = (item) => {
     if (item === 'About Me') {
-      startAboutMeMusic()
+      enterAboutMe()
     }
     onNavChange?.(item)
   }
@@ -79,6 +79,12 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
             <button
               key={item}
               onClick={() => handleNavClick(item)}
+              onMouseEnter={() => {
+                if (item === 'About Me') warmUp()
+              }}
+              onFocus={() => {
+                if (item === 'About Me') warmUp()
+              }}
               className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer ${
                 activeNav === item
                   ? 'text-black'
