@@ -12,6 +12,7 @@ import ProjectsCard from './components/ProjectsCard'
 import GlobeCard from './components/GlobeCard'
 import ProjectsPage from './components/ProjectsPage'
 import AboutPage from './components/AboutPage'
+import { useMusic } from './context/useMusic'
 
 const containerVariants = {
   hidden: {},
@@ -59,7 +60,14 @@ export default function App() {
     }
   }, [view])
 
+  const { startAboutMeMusic, leaveAboutMeMusic } = useMusic()
+
   function changeView(next) {
+    if (view === 'About Me' && next !== 'About Me') {
+      leaveAboutMeMusic()
+    } else if (next === 'About Me' && view !== 'About Me') {
+      startAboutMeMusic()
+    }
     setView(next)
     if (next !== 'About Me') setIntroActive(false)
     window.scrollTo({ top: 0, behavior: 'smooth' })

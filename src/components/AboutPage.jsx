@@ -7,8 +7,8 @@ import {
   useSpring,
 } from 'framer-motion'
 import DecryptText from './DecryptText'
-import meImg from '../assets/me.jpg'
 import AboutIntro from './about-intro/AboutIntro'
+import AboutMusicPill from './AboutMusicPill'
 
 const pageContainerVariants = {
   hidden: {},
@@ -233,6 +233,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
 
   return (
     <div className="w-full">
+      <AboutMusicPill />
       <AboutIntro onIntroActiveChange={onIntroActiveChange} />
 
       <div id="about-bento" className="max-w-[1400px] mx-auto px-4 sm:px-6 py-12 relative">
@@ -350,9 +351,12 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             className="relative w-56 h-56 sm:w-64 sm:h-64 rounded-3xl overflow-hidden border border-white/15 bg-zinc-900 shadow-2xl z-10"
           >
             <img
-              src={meImg}
+              src="/me.jpg"
               alt="Devansh Ruikar"
-              className="w-full h-full object-cover object-center"
+              width="600"
+              height="600"
+              loading="lazy"
+              className="w-full h-full object-cover object-[50%_25%]"
             />
           </motion.div>
 

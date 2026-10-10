@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import DecryptText from './DecryptText'
+import { useMusic } from '../context/useMusic'
 
 const navItems = ['Dashboard', 'Projects', 'About Me']
 
 export default function Header({ activeNav = 'Dashboard', onNavChange }) {
-  const [isMuted, setIsMuted] = useState(false)
+  const { isPlaying, isMuted, toggleMute, startAboutMeMusic } = useMusic()
   const [speed, setSpeed] = useState(0)
 
   // Cursor speed tracker
@@ -52,6 +53,13 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
     }
   }, [])
 
+  const handleNavClick = (item) => {
+    if (item === 'About Me') {
+      startAboutMeMusic()
+    }
+    onNavChange?.(item)
+  }
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center mt-4 px-4">
       <div className="glass-nav max-w-[1100px] w-full rounded-full px-5 sm:px-6 h-14 flex items-center justify-between">
@@ -70,7 +78,7 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
           {navItems.map((item) => (
             <button
               key={item}
-              onClick={() => onNavChange?.(item)}
+              onClick={() => handleNavClick(item)}
               className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer ${
                 activeNav === item
                   ? 'text-black'
@@ -96,46 +104,71 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
             <span className="text-xs text-white/60">px/s</span>
           </div>
 
-          <button
-            onClick={() => setIsMuted(!isMuted)}
-            className="w-8 h-8 rounded-full bg-white/[0.05] border border-white/[0.06] flex items-center justify-center hover:bg-white/[0.1] transition-colors cursor-pointer"
-          >
-            <AnimatePresence mode="wait">
-              {isMuted ? (
-                <motion.svg
-                  key="muted"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  className="w-3.5 h-3.5 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                </motion.svg>
-              ) : (
-                <motion.svg
-                  key="unmuted"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  className="w-3.5 h-3.5 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                </motion.svg>
-              )}
-            </AnimatePresence>
-          </button>
+          {/* Music Control */}
+          <div className="relative flex items-center">
+            <button
+              type="button"
+              onClick={toggleMute}
+              title={isPlaying && !isMuted ? 'Mute music' : 'Unmute music'}
+              aria-label={isPlaying && !isMuted ? 'Mute music' : 'Unmute music'}
+              className={`h-8 rounded-full bg-white/[0.05] border border-white/[0.06] hover:bg-white/[0.1] hover:border-violet-500/30 transition-all cursor-pointer flex items-center justify-center ${
+                isPlaying && !isMuted ? 'px-2.5 gap-1.5' : 'w-8'
+              }`}
+            >
+              <AnimatePresence mode="wait">
+                {isMuted || !isPlaying ? (
+                  <motion.svg
+                    key="muted"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className="w-3.5 h-3.5 text-zinc-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                  </motion.svg>
+                ) : (
+                  <motion.svg
+                    key="unmuted"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className="w-3.5 h-3.5 text-violet-300"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  </motion.svg>
+                )}
+              </AnimatePresence>
 
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 ring-2 ring-white/[0.08] flex items-center justify-center">
-            <span className="text-[10px] font-bold text-white">D</span>
+              {/* 3 tiny bouncing violet bars equalizer */}
+              {isPlaying && !isMuted && (
+                <div className="flex items-end gap-[2px] h-3.5 pointer-events-none">
+                  <span className="w-[2px] bg-violet-400 rounded-full animate-eq-1" />
+                  <span className="w-[2px] bg-violet-400 rounded-full animate-eq-2" />
+                  <span className="w-[2px] bg-violet-400 rounded-full animate-eq-3" />
+                </div>
+              )}
+            </button>
+          </div>
+
+          {/* Avatar Photo */}
+          <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-white/[0.08] bg-zinc-900 shrink-0">
+            <img
+              src="/me.jpg"
+              alt="Devansh Ruikar"
+              width="32"
+              height="32"
+              loading="lazy"
+              className="w-full h-full object-cover object-[50%_25%]"
+            />
           </div>
         </div>
       </div>

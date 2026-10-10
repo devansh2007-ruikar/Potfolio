@@ -1,5 +1,3 @@
-import heroImg from '../assets/hero.png'
-
 export default function PortraitCard() {
   return (
     <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
@@ -29,9 +27,12 @@ export default function PortraitCard() {
           <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-500 to-fuchsia-500 opacity-30 blur-sm group-hover:opacity-60 transition duration-500" />
           <div className="relative w-36 h-36 sm:w-40 sm:h-40 lg:w-28 lg:h-28 xl:w-32 xl:h-32 [@media(max-height:760px)]:w-22 [@media(max-height:760px)]:h-22 rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/80 shadow-2xl">
             <img
-              src={heroImg}
+              src="/me.jpg"
               alt="Devansh Ruikar"
-              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+              width="600"
+              height="600"
+              fetchPriority="high"
+              className="w-full h-full object-cover object-[50%_25%] group-hover:scale-105 transition-transform duration-500"
             />
           </div>
         </div>
