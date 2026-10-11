@@ -9,8 +9,10 @@ export default function InkCursorTrail() {
   const pointsRef = useRef([])
   const animFrameRef = useRef(null)
 
+  const isTouch = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
+
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) {
+    if (isTouch) {
       return
     }
 
@@ -97,7 +99,11 @@ export default function InkCursorTrail() {
       window.removeEventListener('mousemove', onMouseMove)
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
     }
-  }, [])
+  }, [isTouch])
+
+  if (isTouch) {
+    return null
+  }
 
   return (
     <canvas

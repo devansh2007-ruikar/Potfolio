@@ -11,6 +11,10 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
 
   // Cursor speed tracker
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches) {
+      return
+    }
+
     let lastX = null
     let lastY = null
     let currentX = null
@@ -62,7 +66,7 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center mt-4 px-4">
-      <div className="glass-nav max-w-[1100px] w-full rounded-full px-5 sm:px-6 h-14 flex items-center justify-between">
+      <div className="glass-nav max-w-[1100px] w-full rounded-full px-5 sm:px-6 h-14 flex items-center justify-between max-md:backdrop-blur-none max-md:bg-black/92">
         {/* Left: Logo */}
         <div className="flex items-center gap-4">
           <button
@@ -171,13 +175,14 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
           <div className="min-w-[44px] min-h-[44px] flex items-center justify-center">
             <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-white/[0.08] bg-zinc-900 shrink-0">
               <img
-                src="/me-640.jpg"
+                src="/me.jpg"
                 srcSet="/me-640.jpg 640w, /me.jpg 1200w"
                 sizes="32px"
                 alt="Devansh Ruikar"
                 width="32"
                 height="32"
                 loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-[50%_25%]"
               />
             </div>

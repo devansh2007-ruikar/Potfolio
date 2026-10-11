@@ -132,7 +132,17 @@ export default function SceneStatements({ p, shouldReduceMotion }) {
           y: blobY,
           opacity: blobOpacity,
         }}
-        className="absolute top-1/3 left-1/4 w-[420px] h-[420px] rounded-full bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-amber-500 blur-3xl pointer-events-none"
+        className="absolute top-1/3 left-1/4 w-[420px] h-[420px] rounded-full bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-amber-500 blur-3xl pointer-events-none max-md:hidden"
+      />
+      <motion.div
+        aria-hidden="true"
+        style={{
+          x: blobX,
+          y: blobY,
+          opacity: blobOpacity,
+          background: 'radial-gradient(circle, rgba(167,139,250,0.18) 0%, rgba(245,158,11,0.12) 45%, transparent 70%)',
+        }}
+        className="absolute top-1/3 left-1/4 w-[420px] h-[420px] rounded-full pointer-events-none md:hidden"
       />
 
       {/* 3 Statements with 3D Flip */}

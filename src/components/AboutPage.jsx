@@ -325,8 +325,16 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             className="bento-card lg:col-span-2 min-h-0 lg:min-h-[420px] p-6 sm:p-8 md:p-10 relative overflow-hidden flex flex-col justify-between"
           >
             {/* Soft background glow */}
-            <div className="absolute top-0 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+            <div
+              className="absolute top-0 right-1/4 w-80 h-80 rounded-full pointer-events-none md:hidden"
+              style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)' }}
+            />
+            <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+            <div
+              className="absolute -bottom-10 -left-10 w-72 h-72 rounded-full pointer-events-none md:hidden"
+              style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.18) 0%, transparent 70%)' }}
+            />
 
             {/* Giant faint DR watermark */}
             <span className="absolute bottom-2 right-4 text-8xl sm:text-9xl font-mono font-black text-white/[0.03] select-none pointer-events-none leading-none">
@@ -433,6 +441,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                   width="600"
                   height="600"
                   loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover object-[50%_25%]"
                 />
               </motion.div>
@@ -455,7 +464,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
           {/* CARD 3 – My Journey (w-full on mobile, lg:col-span-2) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card w-full lg:col-span-2 p-6 sm:p-8 md:p-10 relative overflow-hidden"
+            className="bento-card w-full lg:col-span-2 p-6 sm:p-8 md:p-10 relative overflow-hidden max-md:[content-visibility:auto] max-md:[contain-intrinsic-size:600px]"
           >
             <div className="flex items-center justify-between gap-3 mb-8">
               <div>
@@ -528,10 +537,14 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
           {/* CARD 4 – Goals (w-full on mobile, lg:col-span-1) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card w-full lg:col-span-1 p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between border-violet-500/20"
+            className="bento-card w-full lg:col-span-1 p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between border-violet-500/20 max-md:[content-visibility:auto] max-md:[contain-intrinsic-size:600px]"
           >
             {/* Ambient glow */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-violet-600/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-48 h-48 bg-violet-600/10 rounded-full blur-2xl pointer-events-none max-md:hidden" />
+            <div
+              className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none md:hidden"
+              style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)' }}
+            />
 
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
@@ -598,7 +611,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
           {/* CARD 5 – Toolbox (w-full on mobile, lg:col-span-2) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card w-full lg:col-span-2 p-6 sm:p-8 md:p-10 relative overflow-hidden"
+            className="bento-card w-full lg:col-span-2 p-6 sm:p-8 md:p-10 relative overflow-hidden max-md:[content-visibility:auto] max-md:[contain-intrinsic-size:600px]"
           >
             <div className="flex items-center justify-between gap-3 mb-6">
               <div>
@@ -668,7 +681,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
           {/* CARD 6 – Beyond Code (w-full on mobile, lg:col-span-1) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card w-full lg:col-span-1 p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between"
+            className="bento-card w-full lg:col-span-1 p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between max-md:[content-visibility:auto] max-md:[contain-intrinsic-size:600px]"
           >
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -715,10 +728,18 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
           {/* CARD 7 – Let's Talk / Contact & Links (w-full on mobile, lg:col-span-3) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card w-full lg:col-span-3 p-6 sm:p-8 md:p-10 relative overflow-hidden border-violet-500/30 shadow-[0_0_60px_rgba(167,139,250,0.14)]"
+            className="bento-card w-full lg:col-span-3 p-6 sm:p-8 md:p-10 relative overflow-hidden border-violet-500/30 shadow-[0_0_60px_rgba(167,139,250,0.14)] max-md:[content-visibility:auto] max-md:[contain-intrinsic-size:600px]"
           >
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-10 left-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-1/4 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+            <div
+              className="absolute top-0 right-1/4 w-96 h-96 rounded-full pointer-events-none md:hidden"
+              style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)' }}
+            />
+            <div className="absolute -bottom-10 left-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+            <div
+              className="absolute -bottom-10 left-10 w-80 h-80 rounded-full pointer-events-none md:hidden"
+              style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)' }}
+            />
 
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: Heading, Subtitle, Availability, Email actions */}

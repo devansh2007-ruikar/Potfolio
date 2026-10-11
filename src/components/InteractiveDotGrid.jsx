@@ -15,8 +15,10 @@ export default function InteractiveDotGrid() {
   const animFrameRef = useRef(null)
   const scrollRef = useRef(0)
 
+  const isTouch = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
+
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) {
+    if (isTouch) {
       return
     }
 
@@ -167,7 +169,11 @@ export default function InteractiveDotGrid() {
       document.removeEventListener('mouseleave', onMouseLeave)
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
     }
-  }, [])
+  }, [isTouch])
+
+  if (isTouch) {
+    return null
+  }
 
   return (
     <canvas

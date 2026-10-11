@@ -57,13 +57,13 @@ export default function AboutMusicPill() {
             onClick={() => setIsCollapsed(false)}
             title="Expand music player"
             aria-label="Expand music player"
-            className="flex items-center justify-center w-11 h-11 min-h-[44px] min-w-[44px] rounded-full border border-white/15 bg-black/85 backdrop-blur-md shadow-2xl hover:border-violet-500/40 hover:bg-black/95 transition-all text-zinc-300 hover:text-white cursor-pointer"
+            className="flex items-center justify-center w-11 h-11 min-h-[44px] min-w-[44px] rounded-full border border-white/15 max-md:backdrop-blur-none max-md:bg-black/92 bg-black/85 backdrop-blur-md shadow-2xl hover:border-violet-500/40 hover:bg-black/95 transition-all text-zinc-300 hover:text-white cursor-pointer"
           >
             <span className="text-sm font-mono text-violet-400">♪</span>
           </button>
         ) : (
           /* Full Floating Pill */
-          <div className="flex items-center gap-2.5 px-3.5 py-1.5 min-h-[44px] rounded-full border border-white/15 bg-black/85 backdrop-blur-md shadow-2xl font-mono text-[11px]">
+          <div className="flex items-center gap-2.5 px-3.5 py-1.5 min-h-[44px] rounded-full border border-white/15 max-md:backdrop-blur-none max-md:bg-black/92 bg-black/85 backdrop-blur-md shadow-2xl font-mono text-[11px]">
             {playRejected ? (
               /* Fallback when browser autoplay policy blocks unprompted audio */
               <div className="flex items-center gap-2">

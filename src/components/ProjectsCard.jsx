@@ -38,8 +38,16 @@ export default function ProjectsCard({ onViewAll }) {
     <LayoutGroup id="case-files">
       <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
         {/* Background ambient lighting */}
-        <div className="absolute top-0 right-1/4 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-56 h-56 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+        <div
+          className="absolute top-0 right-1/4 w-72 h-72 rounded-full pointer-events-none md:hidden"
+          style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)' }}
+        />
+        <div className="absolute -bottom-10 -left-10 w-56 h-56 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+        <div
+          className="absolute -bottom-10 -left-10 w-56 h-56 rounded-full pointer-events-none md:hidden"
+          style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)' }}
+        />
 
         {/* Header */}
         <div>

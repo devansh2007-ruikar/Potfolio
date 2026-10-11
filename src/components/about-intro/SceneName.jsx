@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, useTransform, useMotionValueEvent } from 'framer-motion'
 import DecryptText from '../DecryptText'
 import ParticleCanvas from './ParticleCanvas'
@@ -61,29 +61,33 @@ export default function SceneName({ p, shouldReduceMotion }) {
 
         {/* Line 2: DEVANSH. with RGB-split glitch layers */}
         <div className="relative inline-block max-w-full">
-          {/* Cyan glitch copy */}
-          <motion.span
-            aria-hidden="true"
-            style={{
-              x: glitchCyanX,
-              opacity: glitchOpacity,
-            }}
-            className="absolute inset-0 text-[clamp(3rem,18vw,6rem)] md:text-[14vw] font-black text-[#22d3ee] tracking-tighter leading-none select-none pointer-events-none mix-blend-screen !font-sans"
-          >
-            DEVANSH.
-          </motion.span>
+          {/* Cyan glitch copy - desktop only */}
+          {!isMobile && (
+            <motion.span
+              aria-hidden="true"
+              style={{
+                x: glitchCyanX,
+                opacity: glitchOpacity,
+              }}
+              className="absolute inset-0 text-[clamp(3rem,18vw,6rem)] md:text-[14vw] font-black text-[#22d3ee] tracking-tighter leading-none select-none pointer-events-none mix-blend-screen !font-sans"
+            >
+              DEVANSH.
+            </motion.span>
+          )}
 
-          {/* Red/Pink glitch copy */}
-          <motion.span
-            aria-hidden="true"
-            style={{
-              x: glitchRedX,
-              opacity: glitchOpacity,
-            }}
-            className="absolute inset-0 text-[clamp(3rem,18vw,6rem)] md:text-[14vw] font-black text-[#ff375f] tracking-tighter leading-none select-none pointer-events-none mix-blend-screen !font-sans"
-          >
-            DEVANSH.
-          </motion.span>
+          {/* Red/Pink glitch copy - desktop only */}
+          {!isMobile && (
+            <motion.span
+              aria-hidden="true"
+              style={{
+                x: glitchRedX,
+                opacity: glitchOpacity,
+              }}
+              className="absolute inset-0 text-[clamp(3rem,18vw,6rem)] md:text-[14vw] font-black text-[#ff375f] tracking-tighter leading-none select-none pointer-events-none mix-blend-screen !font-sans"
+            >
+              DEVANSH.
+            </motion.span>
+          )}
 
           {/* Main White Text with Decrypt scramble */}
           <h1 className="relative z-10 text-[clamp(3rem,18vw,6rem)] md:text-[14vw] font-black text-white tracking-tighter leading-none !font-sans break-words">

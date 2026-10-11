@@ -34,13 +34,14 @@ export default function ParticleCanvas({ p, shouldReduceMotion }) {
       const rect = canvas.getBoundingClientRect()
       width = rect.width
       height = rect.height
-      dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const isMobile = width < 768
+      dpr = isMobile
+        ? Math.min(window.devicePixelRatio || 1, 1.5)
+        : Math.min(window.devicePixelRatio || 1, 2)
 
       canvas.width = width * dpr
       canvas.height = height * dpr
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-
-      const isMobile = width < 768
       const fontSize = isMobile ? Math.min(width * 0.2, 110) : Math.min(width * 0.14, 190)
 
       const off = document.createElement('canvas')
@@ -86,13 +87,10 @@ export default function ParticleCanvas({ p, shouldReduceMotion }) {
       wasCleared = false
     }
 
-    computeParticles()
-
     const handleResize = () => {
       clearTimeout(resizeTimer)
       resizeTimer = setTimeout(computeParticles, 150)
     }
-    window.addEventListener('resize', handleResize)
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -100,7 +98,6 @@ export default function ParticleCanvas({ p, shouldReduceMotion }) {
       },
       { threshold: 0 }
     )
-    observer.observe(canvas)
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -109,7 +106,6 @@ export default function ParticleCanvas({ p, shouldReduceMotion }) {
         animationFrameId = requestAnimationFrame(renderLoop)
       }
     }
-    document.addEventListener('visibilitychange', handleVisibilityChange)
 
     function renderLoop() {
       if (isVisible && !document.hidden) {
@@ -174,10 +170,40 @@ export default function ParticleCanvas({ p, shouldReduceMotion }) {
       animationFrameId = requestAnimationFrame(renderLoop)
     }
 
-    animationFrameId = requestAnimationFrame(renderLoop)
+    let isStarted = false
+    function start() {
+      if (isStarted) return
+      isStarted = true
+      computeParticles()
+      window.addEventListener('resize', handleResize)
+      observer.observe(canvas)
+      document.addEventListener('visibilitychange', handleVisibilityChange)
+      animationFrameId = requestAnimationFrame(renderLoop)
+    }
+
+    let unsubscribe = null
+    const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768
+    if (isMobileDevice) {
+      if (p.get() > 0.1) {
+        start()
+      } else {
+        unsubscribe = p.on('change', (val) => {
+          if (val > 0.1) {
+            if (unsubscribe) {
+              unsubscribe()
+              unsubscribe = null
+            }
+            start()
+          }
+        })
+      }
+    } else {
+      start()
+    }
 
     return () => {
-      cancelAnimationFrame(animationFrameId)
+      if (unsubscribe) unsubscribe()
+      if (animationFrameId) cancelAnimationFrame(animationFrameId)
       window.removeEventListener('resize', handleResize)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       clearTimeout(resizeTimer)

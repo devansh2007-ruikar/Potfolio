@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { motion, useTransform } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
+import { motion, useTransform, useMotionValueEvent } from 'framer-motion'
 
 const MANIFESTO_TEXT =
   "I'm a computer science student who builds things that are fast under the hood and feel great on the surface. I'm a problem solver at heart — I love breaking hard problems down to their core, thinking them through clearly, and turning them into creative, simple solutions."
@@ -92,9 +92,61 @@ function LitWord({ word, index, total }) {
   )
 }
 
+function MobileWords({ p, words, shouldReduceMotion }) {
+  const containerRef = useRef(null)
+  const litCount = useTransform(p, [0.38, 0.56], [0, words.length])
+
+  useMotionValueEvent(litCount, 'change', (v) => {
+    const el = containerRef.current
+    if (!el) return
+    const count = Math.round(v)
+    const spans = el.children
+    for (let i = 0; i < spans.length; i++) {
+      const isLit = shouldReduceMotion || i <= count
+      spans[i].style.opacity = isLit ? '1' : '0.15'
+    }
+  })
+
+  return (
+    <p ref={containerRef} className="[grid-area:1/1] m-0">
+      {words.map((w, idx) => {
+        const { isViolet, isAmber, colorClass } = getWordStyle(w, idx)
+        const marginClass = idx === words.length - 1 ? 'mr-0' : 'mr-[0.25em]'
+        return (
+          <span
+            key={idx}
+            className={`inline-block ${marginClass} ${colorClass} transition-opacity duration-150`}
+            style={{
+              opacity: shouldReduceMotion ? 1 : 0.15,
+              textShadow:
+                isViolet
+                  ? '0 0 20px rgba(167, 139, 250, 0.6)'
+                  : isAmber
+                  ? '0 0 20px rgba(245, 158, 11, 0.6)'
+                  : undefined,
+            }}
+          >
+            {w}
+          </span>
+        )
+      })}
+    </p>
+  )
+}
+
 export default function SceneManifesto({ p, shouldReduceMotion }) {
   const containerRef = useRef(null)
   const flashlightRef = useRef(null)
+
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  )
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   // 0.34→0.38 enter, 0.56→0.60 exit
   const sceneOpacity = useTransform(p, [0.34, 0.38, 0.56, 0.6], [0, 1, 1, 0])
@@ -102,7 +154,7 @@ export default function SceneManifesto({ p, shouldReduceMotion }) {
   const pointerEvents = useTransform(p, (v) => (v >= 0.34 && v <= 0.6 ? 'auto' : 'none'))
 
   const handlePointerMove = (e) => {
-    if (shouldReduceMotion || !containerRef.current) return
+    if (shouldReduceMotion || isMobile || !containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
     containerRef.current.style.setProperty('--mx', `${e.clientX - rect.left}px`)
     containerRef.current.style.setProperty('--my', `${e.clientY - rect.top}px`)
@@ -112,6 +164,7 @@ export default function SceneManifesto({ p, shouldReduceMotion }) {
   }
 
   const handlePointerLeave = () => {
+    if (isMobile) return
     if (containerRef.current) {
       containerRef.current.style.setProperty('--mx', '-1000px')
       containerRef.current.style.setProperty('--my', '-1000px')
@@ -149,26 +202,30 @@ export default function SceneManifesto({ p, shouldReduceMotion }) {
           '--my': '-1000px',
         }}
       >
-        {/* Base Layer (Words brighten as user scrolls) */}
-        <p className="[grid-area:1/1] m-0">
-          {words.map((w, idx) => (
-            <BaseWord
-              key={idx}
-              word={w}
-              index={idx}
-              total={words.length}
-              p={p}
-              shouldReduceMotion={shouldReduceMotion}
-            />
-          ))}
-        </p>
+        {/* Base Layer */}
+        {isMobile ? (
+          <MobileWords p={p} words={words} shouldReduceMotion={shouldReduceMotion} />
+        ) : (
+          <p className="[grid-area:1/1] m-0">
+            {words.map((w, idx) => (
+              <BaseWord
+                key={idx}
+                word={w}
+                index={idx}
+                total={words.length}
+                p={p}
+                shouldReduceMotion={shouldReduceMotion}
+              />
+            ))}
+          </p>
+        )}
 
-        {/* Flashlight Reveal Layer (Shows 100% lit words inside a 220px circle around cursor) */}
-        {!shouldReduceMotion && (
+        {/* Flashlight Reveal Layer (Shows 100% lit words inside a 220px circle around cursor) - Desktop only */}
+        {!shouldReduceMotion && !isMobile && (
           <div
             ref={flashlightRef}
             aria-hidden="true"
-            className="[grid-area:1/1] pointer-events-none select-none hidden md:block"
+            className="[grid-area:1/1] pointer-events-none select-none"
             style={{
               opacity: 0,
               maskImage:

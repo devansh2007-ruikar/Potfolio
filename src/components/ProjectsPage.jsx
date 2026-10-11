@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { projects } from '../data/projects'
 import DecryptText from './DecryptText'
@@ -30,6 +30,15 @@ const filterOptions = ['All', 'Award', 'Deployed', 'Completed', 'In Progress']
 export default function ProjectsPage() {
   const [selectedId, setSelectedId] = useState(null)
   const [activeFilter, setActiveFilter] = useState('All')
+  const [isSmallScreen, setIsSmallScreen] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 640 : false
+  )
+
+  useEffect(() => {
+    const handleResize = () => setIsSmallScreen(window.innerWidth < 640)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // Calculate statistics from projects data
   const totalCases = projects.length
@@ -63,8 +72,16 @@ export default function ProjectsPage() {
           className="bento-card p-8 sm:p-10 relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-8"
         >
           {/* Ambient blurred glows */}
-          <div className="absolute -top-10 -right-10 w-80 h-80 bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-10 -right-10 w-80 h-80 bg-violet-600/15 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+          <div
+            className="absolute -top-10 -right-10 w-80 h-80 rounded-full pointer-events-none md:hidden"
+            style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.18) 0%, transparent 70%)' }}
+          />
+          <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+          <div
+            className="absolute -bottom-10 -left-10 w-72 h-72 rounded-full pointer-events-none md:hidden"
+            style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.18) 0%, transparent 70%)' }}
+          />
 
           {/* Left Hero Text */}
           <div className="relative z-10 max-w-2xl">
@@ -131,11 +148,19 @@ export default function ProjectsPage() {
         >
           {/* Horizontally scrollable filter pills container */}
           <div className="relative max-w-full overflow-hidden self-start">
-            {/* Fade edges */}
-            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black to-transparent z-10 sm:hidden" />
-            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-black to-transparent z-10 sm:hidden" />
-
-            <div className="overflow-x-auto no-scrollbar scroll-smooth snap-x flex items-center bg-black/90 p-1 rounded-full border border-white/10 w-full sm:w-auto flex-nowrap gap-1">
+            <div
+              className="overflow-x-auto no-scrollbar scroll-smooth snap-x flex items-center bg-black/90 p-1 rounded-full border border-white/10 w-full sm:w-auto flex-nowrap gap-1"
+              style={
+                isSmallScreen
+                  ? {
+                      maskImage:
+                        'linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%)',
+                      WebkitMaskImage:
+                        'linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%)',
+                    }
+                  : undefined
+              }
+            >
               {filterOptions.map((opt) => (
                 <button
                   key={opt}

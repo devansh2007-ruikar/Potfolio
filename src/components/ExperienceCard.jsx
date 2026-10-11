@@ -35,8 +35,16 @@ export default function ExperienceCard() {
   return (
     <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-visible lg:overflow-hidden group">
       {/* Background ambient glow */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/20 transition-all duration-500" />
-      <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-orange-500/10 rounded-full blur-2xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/20 transition-all duration-500 max-md:hidden" />
+      <div
+        className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none md:hidden"
+        style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.18) 0%, transparent 70%)' }}
+      />
+      <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-orange-500/10 rounded-full blur-2xl pointer-events-none max-md:hidden" />
+      <div
+        className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full pointer-events-none md:hidden"
+        style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.18) 0%, transparent 70%)' }}
+      />
 
       {/* Top Header */}
       <div>

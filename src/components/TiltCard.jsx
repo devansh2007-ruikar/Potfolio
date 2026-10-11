@@ -14,6 +14,19 @@ export default function TiltCard({ children, className = '', disabled: disabledP
   const [internalDisabled, setInternalDisabled] = useState(false)
   const isDisabled = disabledProp || internalDisabled
 
+  const [isTouchDevice, setIsTouchDevice] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(hover: none) and (pointer: coarse)').matches
+      : false
+  )
+
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: none) and (pointer: coarse)')
+    const update = (e) => setIsTouchDevice(e.matches)
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
   const [style, setStyle] = useState({
     transform: DEFAULT_TRANSFORM,
     transition: TRANSITION_OUT,
@@ -26,14 +39,6 @@ export default function TiltCard({ children, className = '', disabled: disabledP
     })
   }
 
-  // When disabled or on touch devices, ease back to flat
-  useEffect(() => {
-    const isTouch = window.matchMedia('(hover: none)').matches
-    if (isTouch) {
-      setInternalDisabled(true)
-    }
-  }, [])
-
   useEffect(() => {
     if (isDisabled) {
       setStyle({
@@ -44,8 +49,7 @@ export default function TiltCard({ children, className = '', disabled: disabledP
   }, [isDisabled])
 
   function handleMouseMove(e) {
-    if (isDisabled || document.body.style.overflow === 'hidden') return
-    if (window.matchMedia('(hover: none)').matches) return
+    if (isDisabled || isTouchDevice || document.body.style.overflow === 'hidden') return
     const card = cardRef.current
     if (!card) return
     const rect = card.getBoundingClientRect()
@@ -67,11 +71,27 @@ export default function TiltCard({ children, className = '', disabled: disabledP
   }
 
   function handleMouseLeave() {
-    if (isDisabled) return
+    if (isDisabled || isTouchDevice) return
     setStyle({
       transform: DEFAULT_TRANSFORM,
       transition: TRANSITION_OUT,
     })
+  }
+
+  if (isTouchDevice) {
+    return (
+      <TiltContext.Provider
+        value={{
+          disabled: true,
+          setDisabled: () => {},
+          resetTilt: () => {},
+        }}
+      >
+        <div ref={cardRef} className={`h-full min-h-0 ${className}`}>
+          {children}
+        </div>
+      </TiltContext.Provider>
+    )
   }
 
   return (

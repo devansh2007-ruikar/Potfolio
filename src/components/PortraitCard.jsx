@@ -4,8 +4,16 @@ export default function PortraitCard() {
   return (
     <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-5 sm:p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
       {/* Background ambient glow */}
-      <div className="absolute -top-24 -left-24 w-56 h-56 bg-violet-600/20 rounded-full blur-3xl pointer-events-none group-hover:bg-violet-600/30 transition-all duration-500" />
-      <div className="absolute -bottom-24 -right-24 w-56 h-56 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 -left-24 w-56 h-56 bg-violet-600/20 rounded-full blur-3xl pointer-events-none group-hover:bg-violet-600/30 transition-all duration-500 max-md:hidden" />
+      <div
+        className="absolute -top-24 -left-24 w-56 h-56 rounded-full pointer-events-none md:hidden"
+        style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)' }}
+      />
+      <div className="absolute -bottom-24 -right-24 w-56 h-56 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+      <div
+        className="absolute -bottom-24 -right-24 w-56 h-56 rounded-full pointer-events-none md:hidden"
+        style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)' }}
+      />
 
       {/* Top Header / Availability Badge */}
       <div className="flex items-center justify-between z-10">
@@ -29,13 +37,14 @@ export default function PortraitCard() {
           <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-500 to-fuchsia-500 opacity-30 blur-sm group-hover:opacity-60 transition duration-500" />
           <div className="relative w-36 h-36 sm:w-40 sm:h-40 lg:w-28 lg:h-28 xl:w-32 xl:h-32 [@media(max-height:760px)]:w-22 [@media(max-height:760px)]:h-22 rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/80 shadow-2xl">
             <img
-              src="/me-640.jpg"
+              src="/me.jpg"
               srcSet="/me-640.jpg 640w, /me.jpg 1200w"
               sizes="(max-width: 640px) 160px, 320px"
               alt="Devansh Ruikar"
               width="600"
               height="600"
               fetchPriority="high"
+              decoding="async"
               className="w-full h-full object-cover object-[50%_25%] group-hover:scale-105 transition-transform duration-500"
             />
           </div>

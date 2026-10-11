@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export default function GlobeCard() {
   const [time, setTime] = useState('')
+  const cardRef = useRef(null)
 
   useEffect(() => {
     function updateClock() {
@@ -18,14 +19,48 @@ export default function GlobeCard() {
     }
 
     updateClock()
-    const timer = setInterval(updateClock, 1000)
-    return () => clearInterval(timer)
+
+    const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches
+
+    if (!isMobile) {
+      const timer = setInterval(updateClock, 1000)
+      return () => clearInterval(timer)
+    }
+
+    let timer = null
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          updateClock()
+          if (!timer) timer = setInterval(updateClock, 1000)
+        } else {
+          if (timer) {
+            clearInterval(timer)
+            timer = null
+          }
+        }
+      },
+      { threshold: 0.05 }
+    )
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current)
+    }
+
+    return () => {
+      if (timer) clearInterval(timer)
+      observer.disconnect()
+    }
   }, [])
 
   return (
-    <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
+    <div ref={cardRef} className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
       {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/20 transition-all duration-500 glow-blue" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/20 transition-all duration-500 glow-blue max-md:hidden" />
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full pointer-events-none md:hidden"
+        style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.18) 0%, transparent 70%)' }}
+      />
 
       {/* Header */}
       <div className="z-10">

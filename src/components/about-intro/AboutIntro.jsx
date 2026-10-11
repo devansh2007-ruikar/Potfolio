@@ -137,7 +137,7 @@ export default function AboutIntro({ onIntroActiveChange, onSkip }) {
             opacity: skipOpacity,
             pointerEvents: skipPointerEvents,
           }}
-          className="fixed bottom-[calc(84px+env(safe-area-inset-bottom,0px))] md:bottom-6 right-4 md:right-6 z-40 min-h-[44px] px-4 py-2 rounded-full border border-white/15 bg-black/85 backdrop-blur-md text-[11px] font-mono tracking-widest uppercase text-zinc-300 hover:text-white hover:border-white/40 transition-colors cursor-pointer select-none shadow-xl flex items-center gap-1.5"
+          className="fixed bottom-[calc(84px+env(safe-area-inset-bottom,0px))] md:bottom-6 right-4 md:right-6 z-40 min-h-[44px] px-4 py-2 rounded-full border border-white/15 max-md:backdrop-blur-none max-md:bg-black/92 bg-black/85 backdrop-blur-md text-[11px] font-mono tracking-widest uppercase text-zinc-300 hover:text-white hover:border-white/40 transition-colors cursor-pointer select-none shadow-xl flex items-center gap-1.5"
         >
           <span>SKIP INTRO</span>
           <span>→</span>

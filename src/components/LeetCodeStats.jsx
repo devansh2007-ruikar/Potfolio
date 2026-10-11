@@ -131,6 +131,7 @@ export default function LeetCodeStats() {
   const [, setTicker] = useState(0)
 
   const isFetchingRef = useRef(false)
+  const containerRef = useRef(null)
   const countMotion = useMotionValue(0)
   const [displayCount, setDisplayCount] = useState(0)
 
@@ -150,10 +151,45 @@ export default function LeetCodeStats() {
 
   // Periodic ticker for relative time ("Updated Xs ago")
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTicker((t) => t + 1)
-    }, 1000)
-    return () => clearInterval(timer)
+    const isMobile =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(max-width: 767px)').matches
+
+    if (!isMobile) {
+      const timer = setInterval(() => {
+        setTicker((t) => t + 1)
+      }, 1000)
+      return () => clearInterval(timer)
+    }
+
+    let timer = null
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTicker((t) => t + 1)
+          if (!timer) {
+            timer = setInterval(() => {
+              setTicker((t) => t + 1)
+            }, 15000)
+          }
+        } else {
+          if (timer) {
+            clearInterval(timer)
+            timer = null
+          }
+        }
+      },
+      { threshold: 0.05 }
+    )
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current)
+    }
+
+    return () => {
+      if (timer) clearInterval(timer)
+      observer.disconnect()
+    }
   }, [])
 
   const loadStats = useCallback(async (isRetry = false) => {
@@ -255,7 +291,7 @@ export default function LeetCodeStats() {
   const timeAgo = formatTimeAgo(updatedAt)
 
   return (
-    <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5">
+    <div ref={containerRef} className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <a

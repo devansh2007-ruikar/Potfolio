@@ -111,6 +111,7 @@ export default function CaseFileOverlay({
 }) {
   const [mounted, setMounted] = useState(false)
   const [contentReady, setContentReady] = useState(false)
+  const [layoutDone, setLayoutDone] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const project = projects.find((p) => p.id === selectedId)
 
@@ -132,12 +133,14 @@ export default function CaseFileOverlay({
   useEffect(() => {
     if (selectedId) {
       setContentReady(false)
+      setLayoutDone(false)
       const timer = setTimeout(() => {
         setContentReady(true)
       }, 280)
       return () => clearTimeout(timer)
     } else {
       setContentReady(false)
+      setLayoutDone(false)
     }
   }, [selectedId])
 
@@ -199,23 +202,44 @@ export default function CaseFileOverlay({
             layoutId={`${layoutPrefix}-${project.id}`}
             transition={springTransition}
             onClick={(e) => e.stopPropagation()}
+            onLayoutAnimationComplete={() => {
+              if (isMobile) setLayoutDone(true)
+            }}
             style={{
               '--accent': project.accent,
               borderRadius: isMobile ? 0 : 24,
               width: isMobile ? '100vw' : 'min(1100px, 94vw)',
               height: isMobile ? '100dvh' : 'min(88vh, 900px)',
             }}
-            className="fixed inset-0 m-auto z-[101] bg-black [background-image:radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:20px_20px] border-0 md:border md:border-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden"
+            className="fixed inset-0 m-auto z-[101] bg-black [background-image:radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:20px_20px] border-0 md:border md:border-white/10 max-md:shadow-[0_10px_30px_rgba(0,0,0,0.5)] md:shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden"
           >
             {/* Scrollable inner wrapper rendering only when contentReady is true */}
             {contentReady && (
               <div className="relative h-full w-full overflow-y-auto overscroll-contain p-5 sm:p-8 md:p-10 pb-28 md:pb-10">
-                {/* Ambient inner glow blur using CSS variable */}
+                {/* Ambient inner glow: blur on desktop, cheap radial-gradient delayed until layoutDone on mobile */}
                 <div
-                  className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-20"
+                  className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-20 max-md:hidden"
                   style={{ backgroundColor: 'var(--accent)' }}
                 />
-                <div className="absolute bottom-0 left-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
+                {(!isMobile || layoutDone) && (
+                  <>
+                    <div
+                      className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none md:hidden animate-fade-in"
+                      style={{
+                        background:
+                          'radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 70%)',
+                      }}
+                    />
+                    <div
+                      className="absolute bottom-0 left-0 w-80 h-80 rounded-full pointer-events-none md:hidden animate-fade-in"
+                      style={{
+                        background:
+                          'radial-gradient(circle, rgba(139,92,246,0.16) 0%, transparent 70%)',
+                      }}
+                    />
+                  </>
+                )}
 
                 {/* Content Animated Container */}
                 <motion.div
@@ -236,7 +260,7 @@ export default function CaseFileOverlay({
                         onClose?.()
                       }
                     }}
-                    className="w-full sticky top-0 z-30 -mt-5 -mx-5 px-5 pt-3 pb-3 bg-black/95 backdrop-blur-md border-b border-white/10 md:static md:mt-0 md:mx-0 md:px-0 md:pt-0 md:bg-transparent md:backdrop-blur-none md:border-none"
+                    className="w-full sticky top-0 z-30 -mt-5 -mx-5 px-5 pt-3 pb-3 max-md:backdrop-blur-none max-md:bg-black/92 bg-black/95 backdrop-blur-md border-b border-white/10 md:static md:mt-0 md:mx-0 md:px-0 md:pt-0 md:bg-transparent md:backdrop-blur-none md:border-none"
                   >
                     {/* Swipe indicator pill on mobile */}
                     <div className="w-10 h-1 bg-white/25 rounded-full mx-auto mb-2.5 md:hidden" />
@@ -374,8 +398,15 @@ export default function CaseFileOverlay({
 
                           {/* Ambient center glow */}
                           <div
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-15"
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-15 max-md:hidden"
                             style={{ backgroundColor: 'var(--accent)' }}
+                          />
+                          <div
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full pointer-events-none opacity-15 md:hidden"
+                            style={{
+                              background:
+                                'radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 70%)',
+                            }}
                           />
 
                           {/* Top telemetry strip */}
