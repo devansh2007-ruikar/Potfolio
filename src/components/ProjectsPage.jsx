@@ -25,7 +25,7 @@ const pageItemVariants = {
   },
 }
 
-const filterOptions = ['All', 'Award', 'Deployed', 'In Progress']
+const filterOptions = ['All', 'Award', 'Deployed', 'Completed', 'In Progress']
 
 export default function ProjectsPage() {
   const [selectedId, setSelectedId] = useState(null)
@@ -80,7 +80,7 @@ export default function ProjectsPage() {
             </h1>
 
             <p className="text-sm sm:text-base text-zinc-400 font-mono mt-3 leading-relaxed">
-              Tactical crypto-forensics, high-performance rendering engines, and production AI architectures.
+              Full-stack platforms, offline-first Android apps, and crypto-forensics architecture.
             </p>
           </div>
 
@@ -258,6 +258,41 @@ export default function ProjectsPage() {
                             +{p.tech.length - 5}
                           </span>
                         )}
+                      </div>
+
+                      {/* Action Links */}
+                      <div
+                        className="flex flex-wrap items-center gap-2 my-3"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {p.links?.map((link, lIdx) => (
+                          <a
+                            key={link.url}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`px-3 py-1 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
+                              lIdx === 0
+                                ? 'text-white font-semibold shadow-sm hover:brightness-110'
+                                : 'bg-transparent text-zinc-300 hover:text-white border hover:bg-white/[0.05]'
+                            }`}
+                            style={
+                              lIdx === 0
+                                ? {
+                                    backgroundColor: `color-mix(in srgb, ${p.accent} 30%, transparent)`,
+                                    border: `1px solid color-mix(in srgb, ${p.accent} 50%, transparent)`,
+                                  }
+                                : {
+                                    borderColor: `color-mix(in srgb, ${p.accent} 40%, transparent)`,
+                                  }
+                            }
+                          >
+                            <span>{link.label}</span>
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        ))}
                       </div>
                     </div>
 

@@ -158,12 +158,12 @@ export default function SceneStatements({ p, shouldReduceMotion }) {
                 <>
                   I build{' '}
                   <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-400 bg-clip-text text-transparent font-bold">
-                    interactive web experiences
+                    Android apps
                   </span>
                   .
                 </>
               }
-              chip="3D · Motion · UI"
+              chip="Offline-first · MVVM"
               p={p}
               range={[0.665, 0.695, 0.72, 0.75]}
               shouldReduceMotion={shouldReduceMotion}
@@ -207,12 +207,12 @@ export default function SceneStatements({ p, shouldReduceMotion }) {
                 <>
                   I build{' '}
                   <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-400 bg-clip-text text-transparent font-bold">
-                    interactive web experiences
+                    Android apps
                   </span>
                   .
                 </>
               }
-              chip="3D · Motion · UI"
+              chip="Offline-first · MVVM"
               p={p}
               range={[0.665, 0.695, 0.72, 0.75]}
               shouldReduceMotion={shouldReduceMotion}

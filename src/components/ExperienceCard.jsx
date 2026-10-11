@@ -9,7 +9,7 @@ const experiences = [
     period: 'Ongoing',
     status: 'Active',
     bullets: [
-      'Run two YouTube channels producing documentary-style and AI-generated videos, managing research, scripting, and editing end-to-end.',
+      'Run two YouTube channels producing documentary-style and AI-generated videos, managing research, scripting and editing end-to-end.',
       'Built a custom browser extension to automate parts of the AI video production workflow.',
     ],
     skills: ['Browser Extension', 'AI Workflow', 'Scripting', 'Video Production'],

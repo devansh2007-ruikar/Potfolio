@@ -30,6 +30,10 @@ export default function ProjectsCard({ onViewAll }) {
     }
   }
 
+  const featuredProjects = projects.filter(
+    (p) => p.id === 'gdg-platform' || p.id === 'mithya'
+  )
+
   return (
     <LayoutGroup id="case-files">
       <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
@@ -58,6 +62,7 @@ export default function ProjectsCard({ onViewAll }) {
               className="group/btn text-[10px] font-mono text-zinc-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] px-2.5 py-1 rounded-lg border border-white/[0.08] transition-colors cursor-pointer flex items-center gap-1.5"
             >
               <span>VIEW ALL</span>
+              <span className="text-zinc-500 font-normal">5 files</span>
               <span className="transition-transform group-hover/btn:translate-x-0.5">→</span>
             </button>
           </div>
@@ -79,7 +84,7 @@ export default function ProjectsCard({ onViewAll }) {
           }}
           className="grid grid-cols-1 md:grid-cols-2 gap-3.5 lg:gap-2.5 my-auto flex-1 min-h-0"
         >
-          {projects.map((p) => (
+          {featuredProjects.map((p) => (
             <motion.div
               key={p.id}
               layoutId={`case-${p.id}`}
@@ -113,6 +118,41 @@ export default function ProjectsCard({ onViewAll }) {
                 <p className="text-xs text-zinc-400 font-mono mt-1 line-clamp-2 lg:line-clamp-1 [@media(max-height:760px)]:hidden leading-relaxed">
                   {p.subtitle}
                 </p>
+
+                {/* Link Buttons */}
+                <div
+                  className="flex flex-wrap items-center gap-1.5 mt-2.5"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {p.links?.map((link, lIdx) => (
+                    <a
+                      key={link.url}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono transition-all flex items-center gap-1 cursor-pointer ${
+                        lIdx === 0
+                          ? 'text-white font-semibold shadow-sm hover:brightness-110'
+                          : 'bg-transparent text-zinc-300 hover:text-white border hover:bg-white/[0.05]'
+                      }`}
+                      style={
+                        lIdx === 0
+                          ? {
+                              backgroundColor: `color-mix(in srgb, ${p.accent} 30%, transparent)`,
+                              border: `1px solid color-mix(in srgb, ${p.accent} 50%, transparent)`,
+                            }
+                          : {
+                              borderColor: `color-mix(in srgb, ${p.accent} 40%, transparent)`,
+                            }
+                      }
+                    >
+                      <span>{link.label}</span>
+                      <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  ))}
+                </div>
               </div>
 
               {/* Bottom bar with status and sliding "Open file →" hint */}
@@ -142,7 +182,7 @@ export default function ProjectsCard({ onViewAll }) {
             Interactive Architecture Dossiers
           </span>
           <span className="text-[11px] font-mono text-zinc-400">
-            {projects.length} of {projects.length} Files Ready
+            {featuredProjects.length} of {projects.length} Files Shown
           </span>
         </div>
       </div>

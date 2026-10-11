@@ -50,12 +50,12 @@ export default function PortraitCard() {
             </span>
           </h2>
           <p className="text-xs text-zinc-400 font-medium mt-0.5">
-            Software Developer · Java · React · Spring Boot
+            Software Developer · Java · Spring Boot · Android
           </p>
         </div>
 
         <p className="text-xs text-zinc-500 leading-relaxed line-clamp-2">
-          B.Tech CSE @ Ramdeobaba University. Passionate about DSA, distributed systems & AI-assisted web apps.
+          B.Tech CSE @ Ramdeobaba University. Passionate about DSA, backend systems & AI-assisted development.
         </p>
 
         {/* Action / Social links */}

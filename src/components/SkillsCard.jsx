@@ -1,30 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const skillCategories = {
-  Backend: [
-    { name: 'Java', level: 90, detail: 'Core, Collections, Multithreading' },
-    { name: 'Spring Boot', level: 85, detail: 'REST APIs, MVC, Security' },
-    { name: 'Hibernate & JPA', level: 80, detail: 'ORM, Entity Relational, HQL' },
-    { name: 'MySQL', level: 85, detail: 'Query optimization, Schema design' },
-  ],
-  'Core CS': [
-    { name: 'Data Structures & Algorithms', level: 90, detail: 'LeetCode, Graph, DP, Trees' },
-    { name: 'Object-Oriented Programming', level: 92, detail: 'Design patterns, SOLID principles' },
-    { name: 'Operating Systems', level: 82, detail: 'Processes, Concurrency, Memory management' },
-  ],
-  'Tools & AI': [
-    { name: 'Python (NumPy)', level: 84, detail: 'Scikit-learn, Data processing' },
-    { name: 'Git & Maven', level: 85, detail: 'Version control, Build pipelines' },
-    { name: 'AI-Assisted Web Development', level: 90, detail: 'AI workflows, Rapid architecture' },
-    { name: 'Google NotebookLM', level: 88, detail: 'Technical research, Synthesis' },
-  ],
-}
-
-const quickPills = [
-  'Java 21', 'Spring Boot', 'Hibernate', 'MySQL',
-  'Python', 'DSA', 'OOP', 'OS', 'Git', 'Maven', 'REST APIs', 'NotebookLM'
-]
+import { skillCategories, quickPills } from '../data/skills'
 
 export default function SkillsCard() {
   const [activeTab, setActiveTab] = useState('Backend')

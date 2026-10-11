@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion'
 import { fetchLeetCodeStats } from '../lib/leetcode.js'
+import { links } from '../data/links'
 
 const CACHE_KEY = 'lc-stats'
 
@@ -257,12 +258,17 @@ export default function LeetCodeStats() {
     <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <div className="flex items-center gap-2">
+        <a
+          href={links.leetcode}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+        >
           <LeetCodeIcon />
           <span className="text-[10px] font-semibold tracking-[0.25em] text-gray-400 uppercase">
             LeetCode Stats
           </span>
-        </div>
+        </a>
 
         <div className="flex items-center gap-2">
           {fetchFailed ? (

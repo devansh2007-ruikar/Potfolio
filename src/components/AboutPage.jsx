@@ -5,12 +5,13 @@ import AboutIntro from './about-intro/AboutIntro'
 import AboutMusicPill from './AboutMusicPill'
 import Footer from './Footer'
 import { links } from '../data/links'
+import { skillGroups } from '../data/skills'
 
 const ROLES = [
-  'Backend & Distributed Systems',
-  'Interactive 3D Web Experiences',
-  'Smart India Hackathon Finalist',
-  'YouTube Tech & Space Creator',
+  'backend systems',
+  'Android apps',
+  'full-stack platforms',
+  'forensics tools',
 ]
 
 function RotatingRole({ shouldReduceMotion }) {
@@ -99,11 +100,11 @@ const timelineEvents = [
     accent: '#f59e0b',
   },
   {
-    year: '2025',
-    title: 'Built 3D Animated Website',
+    year: '2026',
+    title: 'Built GDG Event Platform & HabitTracker app',
     description:
-      'Engineered interactive WebGL & Three.js canvas environments with physics-based card tilting and perspective camera orchestration.',
-    accent: '#a78bfa',
+      'Engineered a high-concurrency event registration platform with JWT auth and an offline-first Android habit tracker with Room and MVVM.',
+    accent: '#34A853',
   },
   {
     year: '2026',
@@ -126,9 +127,9 @@ const beyondCodeTiles = [
     note: 'Mastering algorithmic optimization, graph theory & recursion',
   },
   {
-    emoji: '🎮',
-    label: '3D & motion design',
-    note: 'Crafting spatial shaders, Three.js canvases & keyframe timing',
+    emoji: '📱',
+    label: 'Mobile engineering',
+    note: 'Crafting offline-first Android architectures, Room databases & MVVM',
   },
   {
     emoji: '📚',
@@ -141,7 +142,7 @@ const goals = [
   {
     phase: 'SHORT-TERM · 2026',
     title: 'Backend / Full-Stack Internship',
-    description: 'Land a high-impact engineering internship in 2026 building production Java/Spring Boot & React services.',
+    description: 'Land a high-impact engineering internship in 2026 building production Java and Spring Boot backend services.',
     accent: '#a78bfa',
     progress: 85,
     icon: (
@@ -228,44 +229,6 @@ function GoalCheckpointRing({ progress, accent, isBeacon, shouldReduceMotion }) 
   )
 }
 
-const toolboxGroups = [
-  {
-    category: 'Technical',
-    accent: '#a78bfa',
-    tech: [
-      'Java',
-      'Python',
-      'Spring Boot',
-      'MySQL',
-      'Git',
-      'Linux',
-      'Streamlit',
-      'Scikit-learn',
-      'Data Structures',
-      'REST APIs',
-    ],
-  },
-  {
-    category: 'Creative',
-    accent: '#f472b6',
-    tech: [
-      'Video editing',
-      'Content creation (YouTube)',
-      'UI/motion design',
-      'Storytelling',
-    ],
-  },
-  {
-    category: 'Organizational',
-    accent: '#38bdf8',
-    tech: [
-      'Team collaboration (SIH)',
-      'Project planning',
-      'Problem solving',
-      'Communication',
-    ],
-  },
-]
 
 const tagContainerVariants = {
   hidden: {},
@@ -395,7 +358,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             {/* Middle & Bottom: Bio and Magnetic Buttons */}
             <div className="relative z-10 pt-6 space-y-6">
               <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl">
-                B.Tech CSE student at Ramdeobaba University. I like building things that are fast under the hood and feel great on the surface — from Spring Boot APIs to interactive 3D websites. I also run YouTube channels about tech and creativity.
+                Computer Science undergraduate with a strong foundation in Java, DSA and backend development (Spring Boot, Hibernate, MySQL). I&apos;ve built and deployed a full-stack event platform, an offline-first Android app and this portfolio — and I run two YouTube channels.
               </p>
 
               <div className="flex items-center gap-3.5 flex-wrap">
@@ -632,23 +595,23 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                     Skills & Capabilities
                   </span>
                 </div>
-                <h2 className="text-2xl font-bold text-white mt-1">Toolbox & Skills</h2>
+                <h2 className="text-2xl font-bold text-white mt-1">Technical Toolbox</h2>
               </div>
               <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500">
                 STACK DIRECTORY
               </span>
             </div>
 
-            {/* Grouped Skills: Technical, Creative, Organizational */}
+            {/* Grouped Skills: 6 Groups */}
             <div className="space-y-6">
-              {toolboxGroups.map((group) => (
+              {skillGroups.map((group) => (
                 <div key={group.category} className="space-y-2.5">
                   <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: group.accent }} />
                     <span className="font-bold text-zinc-300">{group.category}</span>
                     <span className="text-zinc-600">·</span>
                     <span className="text-[10px] text-zinc-500 lowercase font-mono">
-                      {group.tech.length} proficiencies
+                      {group.skills.length} proficiencies
                     </span>
                   </div>
 
@@ -659,7 +622,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                     viewport={{ once: true }}
                     className="flex flex-wrap gap-2"
                   >
-                    {group.tech.map((t) => (
+                    {group.skills.map((t) => (
                       <motion.div
                         key={t}
                         variants={tagItemVariants}
@@ -824,7 +787,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                     </div>
                     <div>
                       <div className="text-sm font-bold text-white group-hover:text-[#0a66c2] transition-colors">LinkedIn</div>
-                      <div className="text-[11px] font-mono text-zinc-500">/in/devansh-ruikar</div>
+                      <div className="text-[11px] font-mono text-zinc-500">/in/devansh-ruikar-4097a2382</div>
                     </div>
                   </div>
                   <span className="text-zinc-500 group-hover:text-[#0a66c2] transition-transform group-hover:translate-x-0.5 font-mono text-sm">↗</span>

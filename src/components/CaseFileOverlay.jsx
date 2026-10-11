@@ -414,42 +414,56 @@ export default function CaseFileOverlay({
                         </div>
                       </div>
 
-                      {/* Buttons (GitHub / Live) */}
-                      <div className="flex items-center gap-3 pt-1">
-                        <a
-                          href={project.linkUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 py-2.5 px-4 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer border shadow-lg group/btn text-white hover:brightness-110"
-                          style={{
-                            borderColor:
-                              'color-mix(in srgb, var(--accent) 45%, transparent)',
-                            backgroundColor:
-                              'color-mix(in srgb, var(--accent) 18%, transparent)',
-                            boxShadow:
-                              '0 0 20px color-mix(in srgb, var(--accent) 25%, transparent)',
-                          }}
-                        >
-                          <span>{project.linkText}</span>
-                          <svg
-                            className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+                      {/* Action Link Buttons */}
+                      <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                        {project.links?.map((link, lIdx) => (
+                          <a
+                            key={link.url}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`flex-1 min-w-[120px] py-2.5 px-4 rounded-xl text-xs font-mono transition-all flex items-center justify-center gap-2 cursor-pointer border shadow-lg group/btn hover:brightness-110 ${
+                              lIdx === 0
+                                ? 'font-semibold text-white'
+                                : 'font-medium text-zinc-200 bg-transparent hover:bg-white/[0.05]'
+                            }`}
+                            style={
+                              lIdx === 0
+                                ? {
+                                    borderColor:
+                                      'color-mix(in srgb, var(--accent) 45%, transparent)',
+                                    backgroundColor:
+                                      'color-mix(in srgb, var(--accent) 25%, transparent)',
+                                    boxShadow:
+                                      '0 0 20px color-mix(in srgb, var(--accent) 25%, transparent)',
+                                  }
+                                : {
+                                    borderColor:
+                                      'color-mix(in srgb, var(--accent) 40%, transparent)',
+                                  }
+                            }
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                            />
-                          </svg>
-                        </a>
+                            <span>{link.label}</span>
+                            <svg
+                              className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                          </a>
+                        ))}
 
                         <button
                           type="button"
                           onClick={onClose}
-                          className="py-2.5 px-4 rounded-xl text-xs font-mono text-zinc-400 hover:text-white bg-white/[0.05] hover:bg-white/[0.09] border border-white/10 transition-colors cursor-pointer"
+                          className="py-2.5 px-4 rounded-xl text-xs font-mono text-zinc-400 hover:text-white bg-white/[0.05] hover:bg-white/[0.09] border border-white/10 transition-colors cursor-pointer flex-shrink-0"
                         >
                           Close (Esc)
                         </button>
