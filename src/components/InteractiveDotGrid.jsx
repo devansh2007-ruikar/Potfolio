@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const DOT_SPACING = 24
 const DOT_RADIUS = 1
@@ -9,6 +10,7 @@ const REPULSION_STRENGTH = 0.55
 const SPRING_EASE = 0.1
 
 export default function InteractiveDotGrid() {
+  const isMobile = useIsMobile()
   const canvasRef = useRef(null)
   const dotsRef = useRef([])
   const mouseRef = useRef({ x: -9999, y: -9999 })
@@ -18,7 +20,7 @@ export default function InteractiveDotGrid() {
   const isTouch = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
 
   useEffect(() => {
-    if (isTouch) {
+    if (isTouch || isMobile) {
       return
     }
 
@@ -169,9 +171,9 @@ export default function InteractiveDotGrid() {
       document.removeEventListener('mouseleave', onMouseLeave)
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
     }
-  }, [isTouch])
+  }, [isTouch, isMobile])
 
-  if (isTouch) {
+  if (isTouch || isMobile) {
     return null
   }
 

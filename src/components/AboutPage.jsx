@@ -6,6 +6,7 @@ import AboutMusicPill from './AboutMusicPill'
 import Footer from './Footer'
 import { links } from '../data/links'
 import { skillGroups } from '../data/skills'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const ROLES = [
   'backend systems',
@@ -273,6 +274,7 @@ const cardItemVariants = {
 }
 
 export default function AboutPage({ onViewWork, onIntroActiveChange }) {
+  const isMobile = useIsMobile()
   const shouldReduceMotion = useReducedMotion()
   const [photoTilt, setPhotoTilt] = useState({ rotateX: 0, rotateY: 0 })
   const [copied, setCopied] = useState(false)
@@ -280,6 +282,12 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [])
+
+  useEffect(() => {
+    if (isMobile) {
+      onIntroActiveChange?.(false)
+    }
+  }, [isMobile, onIntroActiveChange])
 
   const handlePhotoMouseMove = (e) => {
     if (
@@ -309,7 +317,29 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
   return (
     <div className="w-full">
       <AboutMusicPill />
-      <AboutIntro onIntroActiveChange={onIntroActiveChange} />
+      {isMobile ? (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-24 pb-4 space-y-2"
+        >
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+            <span className="text-[11px] font-mono tracking-widest text-zinc-400 uppercase">
+              CASE-000 // DECRYPTED
+            </span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-white">
+            Devansh Ruikar
+          </h1>
+          <p className="text-sm font-mono text-zinc-400">
+            Software Developer · Java · Spring Boot · Android
+          </p>
+        </motion.div>
+      ) : (
+        <AboutIntro onIntroActiveChange={onIntroActiveChange} />
+      )}
 
       <div id="about-bento" className="max-w-[1400px] mx-auto px-4 sm:px-6 py-12 relative">
         <motion.div
@@ -325,16 +355,8 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             className="bento-card lg:col-span-2 min-h-0 lg:min-h-[420px] p-6 sm:p-8 md:p-10 relative overflow-hidden flex flex-col justify-between"
           >
             {/* Soft background glow */}
-            <div className="absolute top-0 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
-            <div
-              className="absolute top-0 right-1/4 w-80 h-80 rounded-full pointer-events-none md:hidden"
-              style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)' }}
-            />
-            <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
-            <div
-              className="absolute -bottom-10 -left-10 w-72 h-72 rounded-full pointer-events-none md:hidden"
-              style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.18) 0%, transparent 70%)' }}
-            />
+            <div className="hidden md:block absolute top-0 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="hidden md:block absolute -bottom-10 -left-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
             {/* Giant faint DR watermark */}
             <span className="absolute bottom-2 right-4 text-8xl sm:text-9xl font-mono font-black text-white/[0.03] select-none pointer-events-none leading-none">
@@ -540,11 +562,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             className="bento-card w-full lg:col-span-1 p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between border-violet-500/20 max-md:[content-visibility:auto] max-md:[contain-intrinsic-size:600px]"
           >
             {/* Ambient glow */}
-            <div className="absolute top-0 right-0 w-48 h-48 bg-violet-600/10 rounded-full blur-2xl pointer-events-none max-md:hidden" />
-            <div
-              className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none md:hidden"
-              style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)' }}
-            />
+            <div className="hidden md:block absolute top-0 right-0 w-48 h-48 bg-violet-600/10 rounded-full blur-2xl pointer-events-none" />
 
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
@@ -730,16 +748,8 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             variants={cardItemVariants}
             className="bento-card w-full lg:col-span-3 p-6 sm:p-8 md:p-10 relative overflow-hidden border-violet-500/30 shadow-[0_0_60px_rgba(167,139,250,0.14)] max-md:[content-visibility:auto] max-md:[contain-intrinsic-size:600px]"
           >
-            <div className="absolute top-0 right-1/4 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none max-md:hidden" />
-            <div
-              className="absolute top-0 right-1/4 w-96 h-96 rounded-full pointer-events-none md:hidden"
-              style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)' }}
-            />
-            <div className="absolute -bottom-10 left-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
-            <div
-              className="absolute -bottom-10 left-10 w-80 h-80 rounded-full pointer-events-none md:hidden"
-              style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)' }}
-            />
+            <div className="hidden md:block absolute top-0 right-1/4 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
+            <div className="hidden md:block absolute -bottom-10 left-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: Heading, Subtitle, Availability, Email actions */}

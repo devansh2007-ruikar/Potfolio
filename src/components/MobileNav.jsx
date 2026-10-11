@@ -44,7 +44,7 @@ export default function MobileNav({ activeNav, onNavChange }) {
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="md:hidden fixed bottom-3 left-3 right-3 z-50 h-[60px] max-md:backdrop-blur-none max-md:bg-black/92 bg-black/85 backdrop-blur-md border border-white/10 rounded-2xl flex items-center justify-around px-2 shadow-2xl pb-[env(safe-area-inset-bottom,0px)]"
+      className="md:hidden fixed bottom-3 left-3 right-3 z-50 h-[60px] bg-black/95 md:bg-black/40 md:backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-around px-2 shadow-2xl pb-[env(safe-area-inset-bottom,0px)]"
       style={{
         boxShadow: '0 12px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 255, 255, 0.05)',
       }}

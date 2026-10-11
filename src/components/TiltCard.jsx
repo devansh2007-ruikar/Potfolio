@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { TiltContext } from '../context/TiltContext'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const TILT_MAX = 12 // max degrees of rotation
 const SCALE = 1.02
@@ -10,6 +11,7 @@ const DEFAULT_TRANSFORM = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale
 const FLATTEN = 'transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)'
 
 export default function TiltCard({ children, className = '', disabled: disabledProp = false }) {
+  const isMobile = useIsMobile()
   const cardRef = useRef(null)
   const [internalDisabled, setInternalDisabled] = useState(false)
   const isDisabled = disabledProp || internalDisabled
@@ -78,7 +80,7 @@ export default function TiltCard({ children, className = '', disabled: disabledP
     })
   }
 
-  if (isTouchDevice) {
+  if (isMobile || isTouchDevice) {
     return (
       <TiltContext.Provider
         value={{
@@ -87,7 +89,7 @@ export default function TiltCard({ children, className = '', disabled: disabledP
           resetTilt: () => {},
         }}
       >
-        <div ref={cardRef} className={`h-full min-h-0 ${className}`}>
+        <div className={`h-full min-h-0 ${className}`}>
           {children}
         </div>
       </TiltContext.Provider>

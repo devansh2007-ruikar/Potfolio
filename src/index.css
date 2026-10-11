@@ -87,6 +87,13 @@ body {
     inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
+@media (max-width: 767px) {
+  .glass-nav {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 /* Bento card base — 3D glass depth */
 .bento-card {
   background-color: #000000;

@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const MAX_POINTS = 50
 const MAX_LINE_WIDTH = 4
 const FADE_SPEED = 0.92 // multiplier per frame — lower = faster fade
 
 export default function InkCursorTrail() {
+  const isMobile = useIsMobile()
   const canvasRef = useRef(null)
   const pointsRef = useRef([])
   const animFrameRef = useRef(null)
@@ -12,7 +14,7 @@ export default function InkCursorTrail() {
   const isTouch = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
 
   useEffect(() => {
-    if (isTouch) {
+    if (isTouch || isMobile) {
       return
     }
 
@@ -99,9 +101,9 @@ export default function InkCursorTrail() {
       window.removeEventListener('mousemove', onMouseMove)
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
     }
-  }, [isTouch])
+  }, [isTouch, isMobile])
 
-  if (isTouch) {
+  if (isTouch || isMobile) {
     return null
   }
 

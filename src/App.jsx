@@ -15,6 +15,7 @@ import ProjectsPage from './components/ProjectsPage'
 import AboutPage from './components/AboutPage'
 import Footer from './components/Footer'
 import { useMusic } from './context/useMusic'
+import { useIsMobile } from './hooks/useIsMobile'
 
 const containerVariants = {
   hidden: {},
@@ -34,6 +35,7 @@ const cardVariants = {
 }
 
 export default function App() {
+  const isMobile = useIsMobile()
   const [view, setView] = useState('Dashboard')
   const [introActive, setIntroActive] = useState(false)
 
@@ -77,8 +79,8 @@ export default function App() {
 
   return (
     <div className={`${isIntroOnScreen ? 'bg-black' : 'dot-grid-bg'} min-h-[100dvh] relative`}>
-      {!isIntroOnScreen && <InteractiveDotGrid />}
-      {!isIntroOnScreen && <InkCursorTrail />}
+      {!isIntroOnScreen && !isMobile && <InteractiveDotGrid />}
+      {!isIntroOnScreen && !isMobile && <InkCursorTrail />}
       <Header activeNav={view} onNavChange={changeView} />
       <MobileNav activeNav={view} onNavChange={changeView} />
 

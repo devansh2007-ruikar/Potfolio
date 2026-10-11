@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { projects as defaultProjects } from '../data/projects'
 import DecryptText from './DecryptText'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const springTransition = { type: 'spring', stiffness: 300, damping: 34, mass: 0.9 }
 
@@ -111,18 +112,8 @@ export default function CaseFileOverlay({
 }) {
   const [mounted, setMounted] = useState(false)
   const [contentReady, setContentReady] = useState(false)
-  const [layoutDone, setLayoutDone] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const isMobile = useIsMobile()
   const project = projects.find((p) => p.id === selectedId)
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   // Wait for client-side DOM mount for createPortal
   useEffect(() => {
@@ -133,14 +124,12 @@ export default function CaseFileOverlay({
   useEffect(() => {
     if (selectedId) {
       setContentReady(false)
-      setLayoutDone(false)
       const timer = setTimeout(() => {
         setContentReady(true)
       }, 280)
       return () => clearTimeout(timer)
     } else {
       setContentReady(false)
-      setLayoutDone(false)
     }
   }, [selectedId])
 
@@ -202,9 +191,6 @@ export default function CaseFileOverlay({
             layoutId={`${layoutPrefix}-${project.id}`}
             transition={springTransition}
             onClick={(e) => e.stopPropagation()}
-            onLayoutAnimationComplete={() => {
-              if (isMobile) setLayoutDone(true)
-            }}
             style={{
               '--accent': project.accent,
               borderRadius: isMobile ? 0 : 24,
@@ -216,30 +202,12 @@ export default function CaseFileOverlay({
             {/* Scrollable inner wrapper rendering only when contentReady is true */}
             {contentReady && (
               <div className="relative h-full w-full overflow-y-auto overscroll-contain p-5 sm:p-8 md:p-10 pb-28 md:pb-10">
-                {/* Ambient inner glow: blur on desktop, cheap radial-gradient delayed until layoutDone on mobile */}
+                {/* Ambient inner glow blur using CSS variable */}
                 <div
-                  className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-20 max-md:hidden"
+                  className="hidden md:block absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-20"
                   style={{ backgroundColor: 'var(--accent)' }}
                 />
-                <div className="absolute bottom-0 left-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none max-md:hidden" />
-                {(!isMobile || layoutDone) && (
-                  <>
-                    <div
-                      className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none md:hidden animate-fade-in"
-                      style={{
-                        background:
-                          'radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 70%)',
-                      }}
-                    />
-                    <div
-                      className="absolute bottom-0 left-0 w-80 h-80 rounded-full pointer-events-none md:hidden animate-fade-in"
-                      style={{
-                        background:
-                          'radial-gradient(circle, rgba(139,92,246,0.16) 0%, transparent 70%)',
-                      }}
-                    />
-                  </>
-                )}
+                <div className="hidden md:block absolute bottom-0 left-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Content Animated Container */}
                 <motion.div
@@ -398,15 +366,8 @@ export default function CaseFileOverlay({
 
                           {/* Ambient center glow */}
                           <div
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-15 max-md:hidden"
+                            className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-15"
                             style={{ backgroundColor: 'var(--accent)' }}
-                          />
-                          <div
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full pointer-events-none opacity-15 md:hidden"
-                            style={{
-                              background:
-                                'radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 70%)',
-                            }}
                           />
 
                           {/* Top telemetry strip */}

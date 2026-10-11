@@ -66,7 +66,7 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center mt-4 px-4">
-      <div className="glass-nav max-w-[1100px] w-full rounded-full px-5 sm:px-6 h-14 flex items-center justify-between max-md:backdrop-blur-none max-md:bg-black/92">
+      <div className="glass-nav max-w-[1100px] w-full rounded-full px-5 sm:px-6 h-14 flex items-center justify-between bg-black/95 md:bg-black/40 md:backdrop-blur-xl">
         {/* Left: Logo */}
         <div className="flex items-center gap-4">
           <button
