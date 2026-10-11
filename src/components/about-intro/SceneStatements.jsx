@@ -8,6 +8,7 @@ function StatementItem({
   shouldReduceMotion,
 }) {
   const [start, enterEnd, exitStart, end] = range
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   // 3D rotation, translation, opacity, and blur transforms
   const rotateX = useTransform(
@@ -28,8 +29,8 @@ function StatementItem({
   )
   const filter = useTransform(blurVal, (v) => `blur(${v}px)`)
 
-  // Parallax Chip (moves 1.4x faster)
-  const chipX = useTransform(p, [start, enterEnd, exitStart, end], [120, 0, 0, -90])
+  // Parallax Chip (damped on mobile to prevent viewport overflow)
+  const chipX = useTransform(p, [start, enterEnd, exitStart, end], isMobile ? [30, 0, 0, -25] : [120, 0, 0, -90])
   const chipOpacity = useTransform(
     p,
     [start, enterEnd, exitStart, end],
@@ -43,10 +44,10 @@ function StatementItem({
   if (shouldReduceMotion) {
     return (
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 py-4">
-        <h2 className="text-3xl sm:text-5xl font-bold text-white tracking-tight">
+        <h2 className="text-[clamp(1.75rem,8vw,3rem)] md:text-5xl font-bold text-white tracking-tight break-words hyphens-auto text-center sm:text-left">
           {statement}
         </h2>
-        <span className="self-start sm:self-auto px-3.5 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/5 text-zinc-300">
+        <span className="self-center sm:self-auto px-3.5 py-1.5 rounded-full text-xs font-mono border border-white/15 bg-white/5 text-zinc-300">
           {chip}
         </span>
       </div>
@@ -64,10 +65,10 @@ function StatementItem({
         transformPerspective: 1200,
         transformStyle: 'preserve-3d',
       }}
-      className="absolute inset-0 flex flex-col justify-center px-6 sm:px-12 md:pl-[10vw] max-w-5xl select-none will-change-[transform,opacity,filter]"
+      className="absolute inset-0 flex flex-col justify-center items-center md:items-start px-5 sm:px-12 md:pl-[10vw] max-w-5xl mx-auto md:mx-0 select-none will-change-[transform,opacity,filter] overflow-hidden"
     >
-      <div className="flex flex-col items-start gap-4 sm:gap-6">
-        <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white tracking-tight leading-tight sm:leading-none">
+      <div className="flex flex-col items-center md:items-start gap-4 sm:gap-6 w-full text-center md:text-left">
+        <h2 className="text-[clamp(1.75rem,8vw,3rem)] md:text-7xl font-bold text-white tracking-tight leading-tight break-words hyphens-auto text-center md:text-left">
           {statement}
         </h2>
 

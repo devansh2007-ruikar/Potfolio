@@ -99,10 +99,10 @@ export default function AboutIntro({ onIntroActiveChange, onSkip }) {
     <section
       ref={containerRef}
       className="relative w-full bg-black"
-      style={{ height: isMobile ? '420vh' : '520vh' }}
+      style={{ height: isMobile ? '300vh' : '520vh' }}
     >
       {/* ONE STICKY STAGE */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
+      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-black">
         {/* Top Progress Indicator Bar */}
         <motion.div
           style={{
@@ -137,7 +137,7 @@ export default function AboutIntro({ onIntroActiveChange, onSkip }) {
             opacity: skipOpacity,
             pointerEvents: skipPointerEvents,
           }}
-          className="fixed bottom-6 right-6 z-40 px-4 py-2 rounded-full border border-white/15 bg-black/80 backdrop-blur-md text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-white hover:border-white/40 transition-colors cursor-pointer select-none shadow-xl flex items-center gap-1.5"
+          className="fixed bottom-[calc(84px+env(safe-area-inset-bottom,0px))] md:bottom-6 right-4 md:right-6 z-40 min-h-[44px] px-4 py-2 rounded-full border border-white/15 bg-black/85 backdrop-blur-md text-[11px] font-mono tracking-widest uppercase text-zinc-300 hover:text-white hover:border-white/40 transition-colors cursor-pointer select-none shadow-xl flex items-center gap-1.5"
         >
           <span>SKIP INTRO</span>
           <span>→</span>

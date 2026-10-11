@@ -26,7 +26,14 @@ export default function TiltCard({ children, className = '', disabled: disabledP
     })
   }
 
-  // When disabled, ease back to flat (never snap with 'none'). When re-enabled, do nothing.
+  // When disabled or on touch devices, ease back to flat
+  useEffect(() => {
+    const isTouch = window.matchMedia('(hover: none)').matches
+    if (isTouch) {
+      setInternalDisabled(true)
+    }
+  }, [])
+
   useEffect(() => {
     if (isDisabled) {
       setStyle({
@@ -38,6 +45,7 @@ export default function TiltCard({ children, className = '', disabled: disabledP
 
   function handleMouseMove(e) {
     if (isDisabled || document.body.style.overflow === 'hidden') return
+    if (window.matchMedia('(hover: none)').matches) return
     const card = cardRef.current
     if (!card) return
     const rect = card.getBoundingClientRect()

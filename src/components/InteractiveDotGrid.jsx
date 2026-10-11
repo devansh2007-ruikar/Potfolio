@@ -16,6 +16,10 @@ export default function InteractiveDotGrid() {
   const scrollRef = useRef(0)
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) {
+      return
+    }
+
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')

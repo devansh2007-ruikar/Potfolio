@@ -2,14 +2,14 @@ import { links } from '../data/links'
 
 export default function PortraitCard() {
   return (
-    <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
+    <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-5 sm:p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
       {/* Background ambient glow */}
       <div className="absolute -top-24 -left-24 w-56 h-56 bg-violet-600/20 rounded-full blur-3xl pointer-events-none group-hover:bg-violet-600/30 transition-all duration-500" />
       <div className="absolute -bottom-24 -right-24 w-56 h-56 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Header / Availability Badge */}
       <div className="flex items-center justify-between z-10">
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 min-h-[36px]">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -29,7 +29,9 @@ export default function PortraitCard() {
           <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-500 to-fuchsia-500 opacity-30 blur-sm group-hover:opacity-60 transition duration-500" />
           <div className="relative w-36 h-36 sm:w-40 sm:h-40 lg:w-28 lg:h-28 xl:w-32 xl:h-32 [@media(max-height:760px)]:w-22 [@media(max-height:760px)]:h-22 rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/80 shadow-2xl">
             <img
-              src="/me.jpg"
+              src="/me-640.jpg"
+              srcSet="/me-640.jpg 640w, /me.jpg 1200w"
+              sizes="(max-width: 640px) 160px, 320px"
               alt="Devansh Ruikar"
               width="600"
               height="600"
@@ -49,7 +51,7 @@ export default function PortraitCard() {
               He/Him
             </span>
           </h2>
-          <p className="text-xs text-zinc-400 font-medium mt-0.5">
+          <p className="text-xs sm:text-sm text-zinc-400 font-medium mt-0.5">
             Software Developer · Java · Spring Boot · Android
           </p>
         </div>
@@ -59,12 +61,12 @@ export default function PortraitCard() {
         </p>
 
         {/* Action / Social links */}
-        <div className="pt-2 lg:pt-1.5 [@media(max-height:760px)]:pt-1 flex items-center gap-2">
+        <div className="pt-2 lg:pt-1.5 [@media(max-height:760px)]:pt-1 flex items-center gap-2 flex-wrap">
           <a
             href={links.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 py-1.5 text-center text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 transition-colors"
+            className="flex-1 min-h-[44px] flex items-center justify-center py-2 text-center text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 transition-colors"
           >
             GitHub
           </a>
@@ -72,13 +74,13 @@ export default function PortraitCard() {
             href={links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 py-1.5 text-center text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 transition-colors"
+            className="flex-1 min-h-[44px] flex items-center justify-center py-2 text-center text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 transition-colors"
           >
             LinkedIn
           </a>
           <a
             href={`mailto:${links.email}`}
-            className="px-3 py-1.5 text-center text-xs font-medium rounded-lg bg-violet-600/80 hover:bg-violet-600 text-white transition-colors"
+            className="min-h-[44px] flex items-center justify-center px-4 py-2 text-center text-xs font-medium rounded-lg bg-violet-600/80 hover:bg-violet-600 text-white transition-colors"
           >
             Contact
           </a>

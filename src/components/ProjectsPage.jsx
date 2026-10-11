@@ -75,7 +75,7 @@ export default function ProjectsPage() {
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white">
+            <h1 className="text-[clamp(2rem,8vw,3.75rem)] font-extrabold tracking-tight text-white break-words hyphens-auto leading-tight">
               <DecryptText text="Classified Projects" delay={150} />
             </h1>
 
@@ -84,10 +84,10 @@ export default function ProjectsPage() {
             </p>
           </div>
 
-          {/* Right: 4 Stat Boxes */}
-          <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-3 w-full lg:w-auto shrink-0">
-            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-3.5 sm:p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+          {/* Right: 4 Stat Boxes (2x2 on mobile) */}
+          <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-2.5 sm:gap-3 w-full lg:w-auto shrink-0">
+            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-2.5 sm:p-4 text-center">
+              <div className="text-xl sm:text-3xl font-extrabold text-white font-mono">
                 {String(totalCases).padStart(2, '0')}
               </div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mt-0.5">
@@ -95,8 +95,8 @@ export default function ProjectsPage() {
               </div>
             </div>
 
-            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-3.5 sm:p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono">
+            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-2.5 sm:p-4 text-center">
+              <div className="text-xl sm:text-3xl font-extrabold text-amber-400 font-mono">
                 {String(totalAwards).padStart(2, '0')}
               </div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mt-0.5">
@@ -104,8 +104,8 @@ export default function ProjectsPage() {
               </div>
             </div>
 
-            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-3.5 sm:p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">
+            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-2.5 sm:p-4 text-center">
+              <div className="text-xl sm:text-3xl font-extrabold text-emerald-400 font-mono">
                 {String(totalDeployed).padStart(2, '0')}
               </div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mt-0.5">
@@ -113,8 +113,8 @@ export default function ProjectsPage() {
               </div>
             </div>
 
-            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-3.5 sm:p-4 text-center">
-              <div className="text-2xl sm:text-3xl font-extrabold text-violet-400 font-mono">
+            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-2.5 sm:p-4 text-center">
+              <div className="text-xl sm:text-3xl font-extrabold text-violet-400 font-mono">
                 {String(uniqueTechCount).padStart(2, '0')}
               </div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mt-0.5">
@@ -124,31 +124,37 @@ export default function ProjectsPage() {
           </div>
         </motion.div>
 
-        {/* 2. Filter Bar */}
+        {/* 2. Filter Bar (Horizontally scrollable with edge fades) */}
         <motion.div
           variants={pageItemVariants}
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
         >
-          {/* Filter Pills */}
-          <div className="inline-flex items-center bg-black/90 p-1 rounded-full border border-white/10 self-start">
-            {filterOptions.map((opt) => (
-              <button
-                key={opt}
-                onClick={() => setActiveFilter(opt)}
-                className={`relative px-4 py-1.5 text-xs font-mono uppercase tracking-wider rounded-full transition-colors cursor-pointer ${
-                  activeFilter === opt ? 'text-black font-semibold' : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                {activeFilter === opt && (
-                  <motion.div
-                    layoutId="projectFilterPill"
-                    className="absolute inset-0 bg-white rounded-full shadow-sm"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{opt}</span>
-              </button>
-            ))}
+          {/* Horizontally scrollable filter pills container */}
+          <div className="relative max-w-full overflow-hidden self-start">
+            {/* Fade edges */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black to-transparent z-10 sm:hidden" />
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-black to-transparent z-10 sm:hidden" />
+
+            <div className="overflow-x-auto no-scrollbar scroll-smooth snap-x flex items-center bg-black/90 p-1 rounded-full border border-white/10 w-full sm:w-auto flex-nowrap gap-1">
+              {filterOptions.map((opt) => (
+                <button
+                  key={opt}
+                  onClick={() => setActiveFilter(opt)}
+                  className={`snap-start whitespace-nowrap min-h-[44px] shrink-0 relative px-4 py-2 text-xs font-mono uppercase tracking-wider rounded-full transition-colors cursor-pointer flex items-center justify-center ${
+                    activeFilter === opt ? 'text-black font-semibold' : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  {activeFilter === opt && (
+                    <motion.div
+                      layoutId="projectFilterPill"
+                      className="absolute inset-0 bg-white rounded-full shadow-sm"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{opt}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Showing counter */}
@@ -197,7 +203,7 @@ export default function ProjectsPage() {
                       borderRadius: 24,
                       '--accent': p.accent,
                     }}
-                    className="dossier-card group relative bg-black border border-white/10 p-6 sm:p-7 min-h-[340px] flex flex-col justify-between cursor-pointer transition-[border-color,box-shadow] duration-300 hover:border-white/25 overflow-hidden"
+                    className="dossier-card group relative bg-black border border-white/10 p-5 sm:p-7 min-h-[300px] flex flex-col justify-between cursor-pointer transition-[border-color,box-shadow] duration-300 hover:border-white/25 overflow-hidden"
                   >
                     {/* Spotlight overlay */}
                     <div className="dossier-spotlight absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -271,7 +277,7 @@ export default function ProjectsPage() {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`px-3 py-1 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
+                            className={`min-h-[44px] px-3.5 py-2 rounded-lg text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
                               lIdx === 0
                                 ? 'text-white font-semibold shadow-sm hover:brightness-110'
                                 : 'bg-transparent text-zinc-300 hover:text-white border hover:bg-white/[0.05]'
@@ -308,7 +314,7 @@ export default function ProjectsPage() {
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-1 text-xs font-mono text-zinc-400 group-hover:text-white transition-colors">
+                      <div className="flex items-center gap-1 text-xs font-mono text-zinc-400 group-hover:text-white [@media(hover:none)]:text-white transition-colors">
                         <span>Open file</span>
                         <span className="transition-transform group-hover:translate-x-1">→</span>
                       </div>

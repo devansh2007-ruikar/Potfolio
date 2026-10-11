@@ -111,7 +111,17 @@ export default function CaseFileOverlay({
 }) {
   const [mounted, setMounted] = useState(false)
   const [contentReady, setContentReady] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const project = projects.find((p) => p.id === selectedId)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Wait for client-side DOM mount for createPortal
   useEffect(() => {
@@ -191,15 +201,15 @@ export default function CaseFileOverlay({
             onClick={(e) => e.stopPropagation()}
             style={{
               '--accent': project.accent,
-              borderRadius: 24,
-              width: 'min(1100px, 94vw)',
-              height: 'min(88vh, 900px)',
+              borderRadius: isMobile ? 0 : 24,
+              width: isMobile ? '100vw' : 'min(1100px, 94vw)',
+              height: isMobile ? '100dvh' : 'min(88vh, 900px)',
             }}
-            className="fixed inset-0 m-auto z-[101] bg-black [background-image:radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:20px_20px] border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden"
+            className="fixed inset-0 m-auto z-[101] bg-black [background-image:radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:20px_20px] border-0 md:border md:border-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden"
           >
             {/* Scrollable inner wrapper rendering only when contentReady is true */}
             {contentReady && (
-              <div className="relative h-full w-full overflow-y-auto overscroll-contain p-6 sm:p-8 md:p-10">
+              <div className="relative h-full w-full overflow-y-auto overscroll-contain p-5 sm:p-8 md:p-10 pb-28 md:pb-10">
                 {/* Ambient inner glow blur using CSS variable */}
                 <div
                   className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-20"
@@ -215,10 +225,24 @@ export default function CaseFileOverlay({
                   exit="exit"
                   className="relative z-10 flex flex-col gap-6 sm:gap-7"
                 >
-                  {/* 1. Header Strip */}
-                  <motion.div variants={blockVariants} className="w-full">
-                    <div className="flex items-center justify-between gap-4 pb-3">
-                      <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap font-mono uppercase text-[11px] tracking-widest">
+                  {/* 1. Header Strip with Sticky bar and swipe down on mobile */}
+                  <motion.div
+                    variants={blockVariants}
+                    drag={isMobile ? 'y' : false}
+                    dragConstraints={{ top: 0, bottom: 0 }}
+                    dragElastic={{ top: 0, bottom: 0.6 }}
+                    onDragEnd={(_, info) => {
+                      if (info.offset.y > 120) {
+                        onClose?.()
+                      }
+                    }}
+                    className="w-full sticky top-0 z-30 -mt-5 -mx-5 px-5 pt-3 pb-3 bg-black/95 backdrop-blur-md border-b border-white/10 md:static md:mt-0 md:mx-0 md:px-0 md:pt-0 md:bg-transparent md:backdrop-blur-none md:border-none"
+                  >
+                    {/* Swipe indicator pill on mobile */}
+                    <div className="w-10 h-1 bg-white/25 rounded-full mx-auto mb-2.5 md:hidden" />
+
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 sm:gap-3 flex-wrap font-mono uppercase text-[11px] tracking-widest">
                         <span className="text-zinc-400 font-bold">
                           {project.caseId}
                         </span>
@@ -226,7 +250,7 @@ export default function CaseFileOverlay({
                         <span className="text-zinc-500">{project.year}</span>
                         <span className="text-zinc-600">·</span>
                         <span
-                          className="px-2.5 py-0.5 rounded-full border text-[11px] font-mono uppercase tracking-widest font-medium"
+                          className="px-2.5 py-0.5 rounded-full border text-[10px] sm:text-[11px] font-mono uppercase tracking-widest font-medium"
                           style={{
                             borderColor:
                               'color-mix(in srgb, var(--accent) 40%, transparent)',
@@ -239,21 +263,22 @@ export default function CaseFileOverlay({
                         </span>
                       </div>
 
-                      {/* Top-Right "✕ CLOSE FILE" mono button */}
+                      {/* Top-Right "✕ CLOSE FILE" mono button with 44px tap area */}
                       <button
                         type="button"
                         onClick={onClose}
-                        className="px-3.5 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center gap-2 flex-shrink-0"
+                        aria-label="Close Case File"
+                        className="min-h-[44px] min-w-[44px] px-3.5 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] active:bg-white/[0.2] border border-white/10 text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center justify-center gap-1.5 flex-shrink-0"
                       >
-                        <span className="text-sm leading-none">✕</span>
-                        <span>CLOSE FILE</span>
+                        <span className="text-base leading-none">✕</span>
+                        <span className="hidden sm:inline">CLOSE FILE</span>
                       </button>
                     </div>
 
                     {/* Thin 1px line that draws from left to right (scaleX 0→1, origin-left) */}
                     <motion.div
                       variants={lineVariants}
-                      className="h-[1px] w-full origin-left"
+                      className="h-[1px] w-full origin-left mt-3 hidden md:block"
                       style={{
                         background:
                           'linear-gradient(90deg, var(--accent) 0%, rgba(255,255,255,0.2) 35%, rgba(255,255,255,0.06) 100%)',
@@ -263,7 +288,7 @@ export default function CaseFileOverlay({
 
                   {/* 2. Title + Subtitle */}
                   <motion.div variants={blockVariants}>
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white flex items-center gap-4 flex-wrap">
+                    <h2 className="text-[clamp(1.75rem,8vw,2.5rem)] md:text-6xl font-bold tracking-tight text-white flex items-center gap-3 flex-wrap break-words hyphens-auto">
                       <DecryptText
                         text={project.title}
                         trigger={selectedId}
@@ -335,8 +360,8 @@ export default function CaseFileOverlay({
                           </span>
                         </div>
 
-                        {/* Evidence Box with scanline gradient */}
-                        <div className="relative rounded-2xl border border-white/10 bg-zinc-950/90 overflow-hidden h-52 sm:h-64 flex flex-col justify-between p-4 [background-image:repeating-linear-gradient(0deg,rgba(0,0,0,0.5)_0px,rgba(0,0,0,0.5)_2px,transparent_2px,transparent_4px)]">
+                        {/* Evidence Box with scanline gradient (max-height 200px on mobile) */}
+                        <div className="relative rounded-2xl border border-white/10 bg-zinc-950/90 overflow-hidden h-48 sm:h-56 md:h-64 max-h-[200px] md:max-h-none flex flex-col justify-between p-3.5 sm:p-4 [background-image:repeating-linear-gradient(0deg,rgba(0,0,0,0.5)_0px,rgba(0,0,0,0.5)_2px,transparent_2px,transparent_4px)]">
                           {/* Animated scanline gradient sweep */}
                           <div
                             className="absolute inset-0 pointer-events-none opacity-25 animate-scanline"
@@ -422,7 +447,7 @@ export default function CaseFileOverlay({
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`flex-1 min-w-[120px] py-2.5 px-4 rounded-xl text-xs font-mono transition-all flex items-center justify-center gap-2 cursor-pointer border shadow-lg group/btn hover:brightness-110 ${
+                            className={`flex-1 min-w-[120px] min-h-[44px] py-2.5 px-4 rounded-xl text-xs font-mono transition-all flex items-center justify-center gap-2 cursor-pointer border shadow-lg group/btn hover:brightness-110 ${
                               lIdx === 0
                                 ? 'font-semibold text-white'
                                 : 'font-medium text-zinc-200 bg-transparent hover:bg-white/[0.05]'
@@ -463,7 +488,7 @@ export default function CaseFileOverlay({
                         <button
                           type="button"
                           onClick={onClose}
-                          className="py-2.5 px-4 rounded-xl text-xs font-mono text-zinc-400 hover:text-white bg-white/[0.05] hover:bg-white/[0.09] border border-white/10 transition-colors cursor-pointer flex-shrink-0"
+                          className="min-h-[44px] py-2.5 px-4 rounded-xl text-xs font-mono text-zinc-400 hover:text-white bg-white/[0.05] hover:bg-white/[0.09] border border-white/10 transition-colors cursor-pointer flex-shrink-0 flex items-center justify-center"
                         >
                           Close (Esc)
                         </button>

@@ -98,7 +98,7 @@ export default function SceneReveal({ p, shouldReduceMotion }) {
             opacity: textOpacity,
             y: textY,
           }}
-          className="relative z-10 text-center px-6 max-w-2xl"
+          className="relative z-10 text-center px-6 max-w-2xl pt-24 sm:pt-0"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 border border-zinc-200 text-xs font-mono text-zinc-600 mb-4">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />

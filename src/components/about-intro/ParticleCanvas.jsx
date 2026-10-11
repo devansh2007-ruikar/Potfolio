@@ -59,7 +59,7 @@ export default function ParticleCanvas({ p, shouldReduceMotion }) {
       octx.fillText('DEVANSH.', width / 2, textY)
 
       const imgData = octx.getImageData(0, 0, width, height).data
-      const step = isMobile ? 8 : 6
+      const step = isMobile ? 12 : 6
       const newParticles = []
 
       for (let y = 0; y < height; y += step) {
@@ -102,8 +102,17 @@ export default function ParticleCanvas({ p, shouldReduceMotion }) {
     )
     observer.observe(canvas)
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationFrameId)
+      } else {
+        animationFrameId = requestAnimationFrame(renderLoop)
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     function renderLoop() {
-      if (isVisible) {
+      if (isVisible && !document.hidden) {
         const progress = p.get()
 
         // Only active in range [0.27, 0.42]
@@ -170,6 +179,7 @@ export default function ParticleCanvas({ p, shouldReduceMotion }) {
     return () => {
       cancelAnimationFrame(animationFrameId)
       window.removeEventListener('resize', handleResize)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       clearTimeout(resizeTimer)
       observer.disconnect()
     }

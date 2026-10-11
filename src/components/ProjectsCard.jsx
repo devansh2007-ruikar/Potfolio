@@ -36,7 +36,7 @@ export default function ProjectsCard({ onViewAll }) {
 
   return (
     <LayoutGroup id="case-files">
-      <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
+      <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
         {/* Background ambient lighting */}
         <div className="absolute top-0 right-1/4 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-10 -left-10 w-56 h-56 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -59,7 +59,7 @@ export default function ProjectsCard({ onViewAll }) {
             <button
               type="button"
               onClick={onViewAll}
-              className="group/btn text-[10px] font-mono text-zinc-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] px-2.5 py-1 rounded-lg border border-white/[0.08] transition-colors cursor-pointer flex items-center gap-1.5"
+              className="group/btn text-[10px] font-mono text-zinc-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] px-3 py-2 min-h-[44px] rounded-lg border border-white/[0.08] transition-colors cursor-pointer flex items-center gap-1.5"
             >
               <span>VIEW ALL</span>
               <span className="text-zinc-500 font-normal">5 files</span>
@@ -130,7 +130,7 @@ export default function ProjectsCard({ onViewAll }) {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono transition-all flex items-center gap-1 cursor-pointer ${
+                      className={`px-3 py-2 min-h-[44px] rounded text-[10px] font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
                         lIdx === 0
                           ? 'text-white font-semibold shadow-sm hover:brightness-110'
                           : 'bg-transparent text-zinc-300 hover:text-white border hover:bg-white/[0.05]'
@@ -165,8 +165,8 @@ export default function ProjectsCard({ onViewAll }) {
                   {p.status} • {p.year}
                 </span>
 
-                {/* Small "Open file →" hint that slides in on hover */}
-                <div className="flex items-center gap-1 text-[11px] font-mono font-medium text-violet-400 opacity-0 -translate-x-2 group-hover/card:opacity-100 group-hover/card:translate-x-0 transition-all duration-200">
+                {/* Small "Open file →" hint: always visible on touch, hover on desktop */}
+                <div className="flex items-center gap-1 text-[11px] font-mono font-medium text-violet-400 opacity-100 md:opacity-0 translate-x-0 md:-translate-x-2 md:group-hover/card:opacity-100 md:group-hover/card:translate-x-0 transition-all duration-200">
                   <span>Open file</span>
                   <span className="transition-transform group-hover/card:translate-x-0.5">→</span>
                 </div>

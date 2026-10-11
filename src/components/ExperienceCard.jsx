@@ -33,7 +33,7 @@ export default function ExperienceCard() {
   const currentExp = experiences.find((e) => e.id === activeId) || experiences[0]
 
   return (
-    <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
+    <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-visible lg:overflow-hidden group">
       {/* Background ambient glow */}
       <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/20 transition-all duration-500" />
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-orange-500/10 rounded-full blur-2xl pointer-events-none" />
@@ -66,7 +66,7 @@ export default function ExperienceCard() {
           <button
             key={exp.id}
             onClick={() => setActiveId(exp.id)}
-            className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-all text-center truncate cursor-pointer ${
+            className={`flex-1 min-h-[44px] py-2 px-3 rounded-lg text-xs font-medium transition-all text-center truncate cursor-pointer flex items-center justify-center ${
               activeId === exp.id
                 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-sm'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]'
@@ -77,8 +77,8 @@ export default function ExperienceCard() {
         ))}
       </div>
 
-      {/* Active Experience Details Container - Scrollable Block */}
-      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar max-h-[195px] lg:max-h-none pr-1 my-1">
+      {/* Active Experience Details Container - Flexible on mobile, scrollable on lg */}
+      <div className="flex-1 min-h-0 lg:overflow-y-auto lg:no-scrollbar pr-1 my-1">
         <motion.div
           key={currentExp.id}
           initial={{ opacity: 0, y: 8 }}

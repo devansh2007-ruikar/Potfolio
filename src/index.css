@@ -239,4 +239,16 @@ body {
   }
 }
 
+/* Touch device adaptations */
+@media (hover: none) {
+  body {
+    cursor: auto;
+  }
+
+  /* Disable spotlight overlays that rely on desktop mouse coordinates */
+  .dossier-spotlight {
+    display: none !important;
+  }
+}
+
 

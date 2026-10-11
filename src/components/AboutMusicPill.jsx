@@ -9,7 +9,7 @@ import { useMusic } from '../context/useMusic'
  */
 export default function AboutMusicPill() {
   const { isPlaying, isMuted, showMutedHint, playRejected, toggleMute } = useMusic()
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(() => (typeof window !== 'undefined' ? window.innerWidth < 768 : false))
 
   // Expand when hint appears or playback was blocked
   useEffect(() => {
@@ -48,22 +48,22 @@ export default function AboutMusicPill() {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 16, scale: 0.9 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed bottom-6 left-6 z-40 select-none"
+        className="fixed bottom-[calc(84px+env(safe-area-inset-bottom,0px))] md:bottom-6 left-4 md:left-6 z-40 select-none"
       >
         {isCollapsed ? (
-          /* Collapsed Mini Pill */
+          /* Collapsed Round 44px Icon Button on Mobile */
           <button
             type="button"
             onClick={() => setIsCollapsed(false)}
             title="Expand music player"
             aria-label="Expand music player"
-            className="flex items-center justify-center w-8 h-8 rounded-full border border-white/15 bg-black/75 backdrop-blur-md shadow-2xl hover:border-violet-500/40 hover:bg-black/90 transition-all text-zinc-300 hover:text-white cursor-pointer"
+            className="flex items-center justify-center w-11 h-11 min-h-[44px] min-w-[44px] rounded-full border border-white/15 bg-black/85 backdrop-blur-md shadow-2xl hover:border-violet-500/40 hover:bg-black/95 transition-all text-zinc-300 hover:text-white cursor-pointer"
           >
-            <span className="text-xs font-mono">♪</span>
+            <span className="text-sm font-mono text-violet-400">♪</span>
           </button>
         ) : (
           /* Full Floating Pill */
-          <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-white/15 bg-black/75 backdrop-blur-md shadow-2xl font-mono text-[11px]">
+          <div className="flex items-center gap-2.5 px-3.5 py-1.5 min-h-[44px] rounded-full border border-white/15 bg-black/85 backdrop-blur-md shadow-2xl font-mono text-[11px]">
             {playRejected ? (
               /* Fallback when browser autoplay policy blocks unprompted audio */
               <div className="flex items-center gap-2">
@@ -71,7 +71,7 @@ export default function AboutMusicPill() {
                   type="button"
                   onClick={toggleMute}
                   title="Tap to play music"
-                  className="flex items-center gap-1.5 text-violet-300 hover:text-violet-100 transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 min-h-[36px] text-violet-300 hover:text-violet-100 transition-colors cursor-pointer"
                 >
                   <span className="text-xs text-violet-400">▶</span>
                   <span>Tap to play music</span>
@@ -81,7 +81,7 @@ export default function AboutMusicPill() {
                   onClick={() => setIsCollapsed(true)}
                   aria-label="Collapse music player"
                   title="Collapse"
-                  className="text-zinc-500 hover:text-zinc-300 text-xs pl-0.5 cursor-pointer leading-none transition-colors"
+                  className="min-h-[44px] min-w-[32px] flex items-center justify-center text-zinc-500 hover:text-zinc-300 text-sm cursor-pointer leading-none transition-colors"
                 >
                   ‹
                 </button>
@@ -93,7 +93,7 @@ export default function AboutMusicPill() {
                   type="button"
                   onClick={toggleMute}
                   title="Tap to unmute"
-                  className="flex items-center gap-1.5 text-amber-300 hover:text-amber-100 transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 min-h-[36px] text-amber-300 hover:text-amber-100 transition-colors cursor-pointer"
                 >
                   <span className="text-xs">🔇</span>
                   <span>Music muted · tap to unmute</span>
@@ -103,7 +103,7 @@ export default function AboutMusicPill() {
                   onClick={() => setIsCollapsed(true)}
                   aria-label="Collapse music player"
                   title="Collapse"
-                  className="text-zinc-500 hover:text-zinc-300 text-xs pl-0.5 cursor-pointer leading-none transition-colors"
+                  className="min-h-[44px] min-w-[32px] flex items-center justify-center text-zinc-500 hover:text-zinc-300 text-sm cursor-pointer leading-none transition-colors"
                 >
                   ‹
                 </button>
@@ -115,7 +115,7 @@ export default function AboutMusicPill() {
                   type="button"
                   onClick={toggleMute}
                   title={isAudioActive ? 'Mute music (Press M)' : 'Unmute music (Press M)'}
-                  className="flex items-center gap-2 text-zinc-300 hover:text-white transition-colors cursor-pointer tracking-wider"
+                  className="flex items-center gap-2 min-h-[36px] text-zinc-300 hover:text-white transition-colors cursor-pointer tracking-wider"
                 >
                   <span className="text-violet-400 font-bold">♪</span>
                   <span>
@@ -138,7 +138,7 @@ export default function AboutMusicPill() {
                   onClick={toggleMute}
                   aria-label={isAudioActive ? 'Mute music' : 'Unmute music'}
                   title={isAudioActive ? 'Mute music' : 'Unmute music'}
-                  className="text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer px-1 py-0.5 rounded hover:bg-white/10"
+                  className="min-h-[44px] min-w-[36px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer px-1.5 py-0.5 rounded hover:bg-white/10"
                 >
                   {isAudioActive ? '🔊' : '🔇'}
                 </button>
@@ -149,7 +149,7 @@ export default function AboutMusicPill() {
                   onClick={() => setIsCollapsed(true)}
                   aria-label="Collapse music player"
                   title="Collapse"
-                  className="text-zinc-500 hover:text-zinc-300 text-xs pl-0.5 cursor-pointer leading-none transition-colors"
+                  className="min-h-[44px] min-w-[32px] flex items-center justify-center text-zinc-500 hover:text-zinc-300 text-sm cursor-pointer leading-none transition-colors"
                 >
                   ‹
                 </button>

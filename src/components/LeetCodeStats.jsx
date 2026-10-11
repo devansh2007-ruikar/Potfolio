@@ -213,7 +213,7 @@ export default function LeetCodeStats() {
   /* ── Loading State (when no cache exists) ── */
   if (loading && !data) {
     return (
-      <div className="bento-card h-full min-h-[420px] lg:min-h-0">
+      <div className="bento-card h-auto lg:h-full min-h-0">
         <SkeletonLoader />
       </div>
     )
@@ -222,7 +222,7 @@ export default function LeetCodeStats() {
   /* ── Error State (when fetch failed and no cache exists) ── */
   if (hasError && !data) {
     return (
-      <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col p-6 lg:p-4 [@media(max-height:760px)]:p-3.5">
+      <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col p-6 lg:p-4 [@media(max-height:760px)]:p-3.5">
         <div className="flex items-center gap-2">
           <LeetCodeIcon />
           <span className="text-[10px] font-semibold tracking-[0.25em] text-gray-400 uppercase">
@@ -241,7 +241,7 @@ export default function LeetCodeStats() {
           </p>
           <button
             onClick={() => loadStats(true)}
-            className="mt-2 px-4 py-1.5 text-xs font-mono rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/10 transition-colors cursor-pointer"
+            className="mt-2 px-4 py-2.5 min-h-[44px] text-xs font-mono rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/10 transition-colors cursor-pointer flex items-center justify-center"
           >
             Retry
           </button>
@@ -255,14 +255,14 @@ export default function LeetCodeStats() {
   const timeAgo = formatTimeAgo(updatedAt)
 
   return (
-    <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5">
+    <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <a
           href={links.leetcode}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity min-h-[44px]"
         >
           <LeetCodeIcon />
           <span className="text-[10px] font-semibold tracking-[0.25em] text-gray-400 uppercase">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Header from './components/Header'
+import MobileNav from './components/MobileNav'
 import InteractiveDotGrid from './components/InteractiveDotGrid'
 import InkCursorTrail from './components/InkCursorTrail'
 import TiltCard from './components/TiltCard'
@@ -75,18 +76,19 @@ export default function App() {
   const isIntroOnScreen = view === 'About Me' && introActive
 
   return (
-    <div className={`${isIntroOnScreen ? 'bg-black' : 'dot-grid-bg'} min-h-screen relative`}>
+    <div className={`${isIntroOnScreen ? 'bg-black' : 'dot-grid-bg'} min-h-[100dvh] relative`}>
       {!isIntroOnScreen && <InteractiveDotGrid />}
       {!isIntroOnScreen && <InkCursorTrail />}
       <Header activeNav={view} onNavChange={changeView} />
+      <MobileNav activeNav={view} onNavChange={changeView} />
 
       <main
         className={`${
           view === 'About Me'
-            ? 'w-full relative'
+            ? 'w-full relative pb-28 md:pb-0'
             : view === 'Dashboard'
-            ? 'max-w-[1400px] mx-auto px-4 sm:px-6 pt-28 pb-12 lg:h-screen lg:pt-24 lg:pb-6 lg:box-border relative flex flex-col'
-            : 'max-w-[1400px] mx-auto px-4 sm:px-6 pt-28 pb-12 relative'
+            ? 'max-w-[1400px] mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-28 md:pb-6 lg:h-[100dvh] lg:pt-24 lg:pb-6 lg:box-border relative flex flex-col'
+            : 'max-w-[1400px] mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-28 md:pb-12 relative'
         }`}
         style={{ zIndex: 2 }}
       >
@@ -151,28 +153,28 @@ export default function App() {
                 initial="hidden"
                 animate="visible"
               >
-                {/* Row 1 */}
+                {/* Row 1 / Mobile Ordering */}
                 <motion.div
                   id="about"
                   style={{ scrollMarginTop: '110px' }}
                   variants={cardVariants}
-                  className="lg:col-span-1 lg:row-span-1 scroll-mt-[110px] h-full min-h-0"
+                  className="order-1 lg:order-none lg:col-span-1 lg:row-span-1 scroll-mt-[110px] h-full min-h-0"
                 >
                   <TiltCard className="h-full min-h-0"><PortraitCard /></TiltCard>
                 </motion.div>
-                <motion.div variants={cardVariants} className="lg:col-span-1 lg:row-span-1 h-full min-h-0">
+                <motion.div variants={cardVariants} className="order-5 lg:order-none lg:col-span-1 lg:row-span-1 h-full min-h-0">
                   <TiltCard className="h-full min-h-0"><LeetCodeStats /></TiltCard>
                 </motion.div>
-                <motion.div variants={cardVariants} className="lg:col-span-2 lg:row-span-1 h-full min-h-0">
+                <motion.div variants={cardVariants} className="order-4 lg:order-none lg:col-span-2 lg:row-span-1 h-full min-h-0">
                   <TiltCard className="h-full min-h-0"><SkillsCard /></TiltCard>
                 </motion.div>
 
-                {/* Row 2 */}
+                {/* Row 2 / Mobile Ordering */}
                 <motion.div
                   id="experience"
                   style={{ scrollMarginTop: '110px' }}
                   variants={cardVariants}
-                  className="lg:col-span-1 lg:row-span-1 scroll-mt-[110px] h-full min-h-0"
+                  className="order-3 lg:order-none lg:col-span-1 lg:row-span-1 scroll-mt-[110px] h-full min-h-0"
                 >
                   <TiltCard className="h-full min-h-0"><ExperienceCard /></TiltCard>
                 </motion.div>
@@ -180,7 +182,7 @@ export default function App() {
                   id="work"
                   style={{ scrollMarginTop: '110px' }}
                   variants={cardVariants}
-                  className="lg:col-span-2 lg:row-span-1 scroll-mt-[110px] h-full min-h-0"
+                  className="order-2 lg:order-none lg:col-span-2 lg:row-span-1 scroll-mt-[110px] h-full min-h-0"
                 >
                   <TiltCard className="h-full min-h-0">
                     <ProjectsCard onViewAll={() => changeView('Projects')} />
@@ -190,7 +192,7 @@ export default function App() {
                   id="contact"
                   style={{ scrollMarginTop: '110px' }}
                   variants={cardVariants}
-                  className="lg:col-span-1 lg:row-span-1 scroll-mt-[110px] h-full min-h-0"
+                  className="order-6 lg:order-none lg:col-span-1 lg:row-span-1 scroll-mt-[110px] h-full min-h-0"
                 >
                   <TiltCard className="h-full min-h-0"><GlobeCard /></TiltCard>
                 </motion.div>

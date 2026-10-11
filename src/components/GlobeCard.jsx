@@ -23,7 +23,7 @@ export default function GlobeCard() {
   }, [])
 
   return (
-    <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
+    <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden group">
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/20 transition-all duration-500 glow-blue" />
 
@@ -44,16 +44,16 @@ export default function GlobeCard() {
         <p className="text-xs text-zinc-400 font-mono">21.1458° N, 79.0882° E</p>
       </div>
 
-      {/* Center 3D Wireframe Animated Globe Visual */}
-      <div className="relative my-4 lg:my-1.5 [@media(max-height:760px)]:my-1 flex items-center justify-center z-10">
-        <div className="relative w-40 h-40 lg:w-28 lg:h-28 xl:w-32 xl:h-32 [@media(max-height:760px)]:w-22 [@media(max-height:760px)]:h-22 flex items-center justify-center">
+      {/* Center 3D Wireframe Animated Globe Visual (max 180px tall on mobile) */}
+      <div className="relative my-2 lg:my-1.5 [@media(max-height:760px)]:my-1 flex items-center justify-center z-10">
+        <div className="relative w-36 h-36 max-h-[180px] lg:w-28 lg:h-28 xl:w-32 xl:h-32 [@media(max-height:760px)]:w-22 [@media(max-height:760px)]:h-22 flex items-center justify-center">
           {/* Outer Ring */}
           <div className="absolute inset-0 rounded-full border border-cyan-500/20 animate-pulse" />
           <div className="absolute inset-2 rounded-full border border-dashed border-cyan-400/30 globe-rotate" />
 
           {/* Spherical Wireframe SVG */}
           <svg
-            className="w-32 h-32 lg:w-22 lg:h-22 xl:w-26 xl:h-26 [@media(max-height:760px)]:w-18 [@media(max-height:760px)]:h-18 text-cyan-400/40 globe-rotate"
+            className="w-28 h-28 lg:w-22 lg:h-22 xl:w-26 xl:h-26 [@media(max-height:760px)]:w-18 [@media(max-height:760px)]:h-18 text-cyan-400/40 globe-rotate"
             viewBox="0 0 100 100"
             fill="none"
             stroke="currentColor"

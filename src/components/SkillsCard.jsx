@@ -7,7 +7,7 @@ export default function SkillsCard() {
   const [activeTab, setActiveTab] = useState('Backend')
 
   return (
-    <div className="bento-card h-full min-h-[420px] lg:min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden">
+    <div className="bento-card h-auto lg:h-full min-h-0 flex flex-col justify-between p-6 lg:p-4 [@media(max-height:760px)]:p-3.5 relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -30,7 +30,7 @@ export default function SkillsCard() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`relative px-3 py-1.5 lg:py-1 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+                className={`relative min-h-[44px] px-3.5 py-2 text-xs font-medium rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                   activeTab === tab
                     ? 'text-white'
                     : 'text-zinc-400 hover:text-zinc-200'
@@ -50,7 +50,7 @@ export default function SkillsCard() {
         </div>
 
         {/* Scrollable Skill Bars Block with Animated Fill */}
-        <div className="my-1 flex-1 min-h-0 overflow-y-auto no-scrollbar max-h-[175px] lg:max-h-none pr-1">
+        <div className="my-1 flex-1 min-h-0 lg:overflow-y-auto lg:no-scrollbar pr-1">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

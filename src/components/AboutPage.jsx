@@ -50,7 +50,13 @@ function MagneticButton({ children, className, onClick, href, download, shouldRe
   const springY = useSpring(y, springConfig)
 
   const handleMouseMove = (e) => {
-    if (shouldReduceMotion || !ref.current) return
+    if (
+      shouldReduceMotion ||
+      !ref.current ||
+      (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches)
+    ) {
+      return
+    }
     const rect = ref.current.getBoundingClientRect()
     const centerX = rect.left + rect.width / 2
     const centerY = rect.top + rect.height / 2
@@ -276,7 +282,12 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
   }, [])
 
   const handlePhotoMouseMove = (e) => {
-    if (shouldReduceMotion) return
+    if (
+      shouldReduceMotion ||
+      (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches)
+    ) {
+      return
+    }
     const rect = e.currentTarget.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width - 0.5
     const y = (e.clientY - rect.top) / rect.height - 0.5
@@ -306,12 +317,12 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-5"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5"
         >
           {/* CARD 1 – Intro (lg:col-span-2, min-h 420px) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card lg:col-span-2 min-h-[420px] p-8 sm:p-10 relative overflow-hidden flex flex-col justify-between"
+            className="bento-card lg:col-span-2 min-h-0 lg:min-h-[420px] p-6 sm:p-8 md:p-10 relative overflow-hidden flex flex-col justify-between"
           >
             {/* Soft background glow */}
             <div className="absolute top-0 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -344,7 +355,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                 <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500">
                   // HELLO, WORLD. I&apos;M
                 </span>
-                <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight text-white mt-1">
+                <h1 className="text-[clamp(2.5rem,10vw,4.5rem)] font-extrabold tracking-tight text-white mt-1 break-words hyphens-auto">
                   <DecryptText text="Devansh Ruikar" delay={200} />
                 </h1>
 
@@ -365,7 +376,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                 <MagneticButton
                   onClick={onViewWork}
                   shouldReduceMotion={shouldReduceMotion}
-                  className="px-6 py-3 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-mono font-bold tracking-wider uppercase transition-colors cursor-pointer flex items-center gap-2 shadow-lg"
+                  className="min-h-[44px] px-6 py-3 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-mono font-bold tracking-wider uppercase transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-lg"
                 >
                   <span>View my work</span>
                   <span>→</span>
@@ -375,7 +386,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                   href={links.resume}
                   download
                   shouldReduceMotion={shouldReduceMotion}
-                  className="px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-white text-xs font-mono font-semibold tracking-wider uppercase transition-colors cursor-pointer flex items-center gap-2"
+                  className="min-h-[44px] px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-white text-xs font-mono font-semibold tracking-wider uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
                 >
                   <span>Download résumé</span>
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -386,10 +397,10 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             </div>
           </motion.div>
 
-          {/* CARD 2 – Photo (lg:col-span-1) */}
+          {/* CARD 2 – Photo (lg:col-span-1, max-height 420px on mobile) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card lg:col-span-1 min-h-[420px] p-8 relative overflow-hidden flex flex-col items-center justify-center text-center"
+            className="bento-card lg:col-span-1 min-h-[360px] max-h-[420px] p-6 sm:p-8 relative overflow-hidden flex flex-col items-center justify-center text-center"
           >
             <div
               onMouseMove={handlePhotoMouseMove}
@@ -416,6 +427,8 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
               >
                 <img
                   src="/me.jpg"
+                  srcSet="/me-640.jpg 640w, /me.jpg 1200w"
+                  sizes="(max-width: 640px) 240px, 300px"
                   alt="Devansh Ruikar"
                   width="600"
                   height="600"
@@ -439,10 +452,10 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             </div>
           </motion.div>
 
-          {/* CARD 3 – My Journey (lg:col-span-2) */}
+          {/* CARD 3 – My Journey (w-full on mobile, lg:col-span-2) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card lg:col-span-2 p-8 sm:p-10 relative overflow-hidden"
+            className="bento-card w-full lg:col-span-2 p-6 sm:p-8 md:p-10 relative overflow-hidden"
           >
             <div className="flex items-center justify-between gap-3 mb-8">
               <div>
@@ -512,10 +525,10 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             </div>
           </motion.div>
 
-          {/* CARD 4 – Goals (lg:col-span-1) */}
+          {/* CARD 4 – Goals (w-full on mobile, lg:col-span-1) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card lg:col-span-1 p-8 relative overflow-hidden flex flex-col justify-between border-violet-500/20"
+            className="bento-card w-full lg:col-span-1 p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between border-violet-500/20"
           >
             {/* Ambient glow */}
             <div className="absolute top-0 right-0 w-48 h-48 bg-violet-600/10 rounded-full blur-2xl pointer-events-none" />
@@ -582,10 +595,10 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             </div>
           </motion.div>
 
-          {/* CARD 5 – Toolbox (lg:col-span-2) */}
+          {/* CARD 5 – Toolbox (w-full on mobile, lg:col-span-2) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card lg:col-span-2 p-8 sm:p-10 relative overflow-hidden"
+            className="bento-card w-full lg:col-span-2 p-6 sm:p-8 md:p-10 relative overflow-hidden"
           >
             <div className="flex items-center justify-between gap-3 mb-6">
               <div>
@@ -652,10 +665,10 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             </div>
           </motion.div>
 
-          {/* CARD 6 – Beyond Code (lg:col-span-1) */}
+          {/* CARD 6 – Beyond Code (w-full on mobile, lg:col-span-1) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card lg:col-span-1 p-8 relative overflow-hidden flex flex-col justify-between"
+            className="bento-card w-full lg:col-span-1 p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -699,10 +712,10 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
             </div>
           </motion.div>
 
-          {/* CARD 7 – Let's Talk / Contact & Links (lg:col-span-3) */}
+          {/* CARD 7 – Let's Talk / Contact & Links (w-full on mobile, lg:col-span-3) */}
           <motion.div
             variants={cardItemVariants}
-            className="bento-card lg:col-span-3 p-8 sm:p-10 relative overflow-hidden border-violet-500/30 shadow-[0_0_60px_rgba(167,139,250,0.14)]"
+            className="bento-card w-full lg:col-span-3 p-6 sm:p-8 md:p-10 relative overflow-hidden border-violet-500/30 shadow-[0_0_60px_rgba(167,139,250,0.14)]"
           >
             <div className="absolute top-0 right-1/4 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-10 left-10 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -730,7 +743,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                   <button
                     type="button"
                     onClick={handleCopyEmail}
-                    className="py-2.5 px-4 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs font-mono transition-all text-zinc-200 hover:text-white flex items-center gap-3 cursor-pointer group"
+                    className="min-h-[44px] py-2.5 px-4 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs font-mono transition-all text-zinc-200 hover:text-white flex items-center gap-3 cursor-pointer group"
                   >
                     <span>{links.email}</span>
                     <span className="px-2 py-0.5 rounded bg-violet-600/40 text-violet-200 text-[11px] font-bold group-hover:bg-violet-600 transition-colors">
@@ -741,7 +754,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                   {/* Direct Mailto */}
                   <a
                     href={`mailto:${links.email}`}
-                    className="py-2.5 px-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-mono font-semibold transition-all flex items-center gap-2 shadow-lg hover:shadow-violet-500/25 cursor-pointer"
+                    className="min-h-[44px] py-2.5 px-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-mono font-semibold transition-all flex items-center gap-2 shadow-lg hover:shadow-violet-500/25 cursor-pointer"
                   >
                     <span>Email Me</span>
                     <span>↗</span>

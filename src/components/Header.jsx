@@ -65,12 +65,14 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
       <div className="glass-nav max-w-[1100px] w-full rounded-full px-5 sm:px-6 h-14 flex items-center justify-between">
         {/* Left: Logo */}
         <div className="flex items-center gap-4">
-          <span
+          <button
+            type="button"
             onClick={() => onNavChange?.('Dashboard')}
-            className="text-xl font-extrabold tracking-tight text-white cursor-pointer"
+            aria-label="Devv - go to dashboard"
+            className="text-xl font-extrabold tracking-tight text-white cursor-pointer min-h-[44px] min-w-[44px] flex items-center bg-transparent border-0 p-0 text-left"
           >
             <DecryptText text="Devv" />
-          </span>
+          </button>
         </div>
 
         {/* Center: Nav Pill */}
@@ -85,7 +87,7 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
               onFocus={() => {
                 if (item === 'About Me') warmUp()
               }}
-              className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer ${
+              className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer min-h-[36px] ${
                 activeNav === item
                   ? 'text-black'
                   : 'text-white hover:text-white/70'
@@ -104,8 +106,8 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
         </nav>
 
         {/* Right: Points + Volume + Avatar */}
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-1.5 bg-white/[0.1] rounded-full px-3 py-1.5 border border-white/[0.1] w-[88px] justify-center">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden md:flex items-center gap-1.5 bg-white/[0.1] rounded-full px-3 py-1.5 border border-white/[0.1] w-[88px] justify-center">
             <span className="text-xs font-mono text-white">{speed}</span>
             <span className="text-xs text-white/60">px/s</span>
           </div>
@@ -117,8 +119,8 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
               onClick={toggleMute}
               title={isPlaying && !isMuted ? 'Mute music' : 'Unmute music'}
               aria-label={isPlaying && !isMuted ? 'Mute music' : 'Unmute music'}
-              className={`h-8 rounded-full bg-white/[0.05] border border-white/[0.06] hover:bg-white/[0.1] hover:border-violet-500/30 transition-all cursor-pointer flex items-center justify-center ${
-                isPlaying && !isMuted ? 'px-2.5 gap-1.5' : 'w-8'
+              className={`min-h-[44px] min-w-[44px] rounded-full bg-white/[0.05] border border-white/[0.06] hover:bg-white/[0.1] hover:border-violet-500/30 transition-all cursor-pointer flex items-center justify-center ${
+                isPlaying && !isMuted ? 'px-3 gap-1.5' : 'w-11'
               }`}
             >
               <AnimatePresence mode="wait">
@@ -128,7 +130,7 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
-                    className="w-3.5 h-3.5 text-zinc-400"
+                    className="w-4 h-4 text-zinc-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -143,7 +145,7 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
-                    className="w-3.5 h-3.5 text-violet-300"
+                    className="w-4 h-4 text-violet-300"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -166,15 +168,19 @@ export default function Header({ activeNav = 'Dashboard', onNavChange }) {
           </div>
 
           {/* Avatar Photo */}
-          <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-white/[0.08] bg-zinc-900 shrink-0">
-            <img
-              src="/me.jpg"
-              alt="Devansh Ruikar"
-              width="32"
-              height="32"
-              loading="lazy"
-              className="w-full h-full object-cover object-[50%_25%]"
-            />
+          <div className="min-w-[44px] min-h-[44px] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-white/[0.08] bg-zinc-900 shrink-0">
+              <img
+                src="/me-640.jpg"
+                srcSet="/me-640.jpg 640w, /me.jpg 1200w"
+                sizes="32px"
+                alt="Devansh Ruikar"
+                width="32"
+                height="32"
+                loading="lazy"
+                className="w-full h-full object-cover object-[50%_25%]"
+              />
+            </div>
           </div>
         </div>
       </div>
