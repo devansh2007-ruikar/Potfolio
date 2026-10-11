@@ -93,14 +93,14 @@ function MagneticButton({ children, className, onClick, href, download, shouldRe
 
 const timelineEvents = [
   {
-    year: '2023',
+    year: '2025',
     title: 'Started B.Tech CSE @ Ramdeobaba University',
     description:
       'Initiated engineering journey diving deep into Java, object-oriented design, discrete math, and distributed computing foundations.',
     accent: '#a78bfa',
   },
   {
-    year: '2024',
+    year: '2026',
     title: 'Started YouTube channels (Devv & Crazy Space)',
     description:
       'Created technical video essays and visual breakdowns covering software engineering, astrophysics, and space telemetry.',
@@ -499,7 +499,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                 <h2 className="text-2xl font-bold text-white mt-1">My Journey</h2>
               </div>
               <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500">
-                2023 — 2026
+                2025 — 2026
               </span>
             </div>
 
@@ -519,7 +519,7 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
 
               {timelineEvents.map((evt, i) => (
                 <motion.div
-                  key={evt.year}
+                  key={`${evt.year}-${evt.title}`}
                   initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}

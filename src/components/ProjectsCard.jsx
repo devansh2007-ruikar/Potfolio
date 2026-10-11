@@ -1,10 +1,9 @@
 import { useState, useRef } from 'react'
-import { motion, LayoutGroup } from 'framer-motion'
+import { LayoutGroup } from 'framer-motion'
 import { projects } from '../data/projects'
 import CaseFileOverlay from './CaseFileOverlay'
 import { useTilt } from '../context/TiltContext'
 
-const springTransition = { type: 'spring', stiffness: 300, damping: 34, mass: 0.9 }
 const FLATTEN_MS = 230
 
 export default function ProjectsCard({ onViewAll }) {
@@ -93,10 +92,8 @@ export default function ProjectsCard({ onViewAll }) {
           className="grid grid-cols-1 md:grid-cols-2 gap-3.5 lg:gap-2.5 my-auto flex-1 min-h-0"
         >
           {featuredProjects.map((p) => (
-            <motion.div
+            <div
               key={p.id}
-              layoutId={`case-${p.id}`}
-              transition={springTransition}
               onClick={() => openCase(p.id)}
               style={{ borderRadius: 16 }}
               className="group/card relative bg-black [background-image:radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:16px_16px] border border-white/10 p-4 lg:p-3 [@media(max-height:760px)]:p-2.5 flex flex-col justify-between cursor-pointer hover:border-violet-500/40 hover:shadow-[0_0_25px_rgba(167,139,250,0.15)] transition-[border-color,box-shadow] duration-300 min-h-[170px] lg:min-h-0"
@@ -114,13 +111,10 @@ export default function ProjectsCard({ onViewAll }) {
                   </span>
                 </div>
 
-                {/* Title in bold white with layout="position" */}
-                <motion.h4
-                  layout="position"
-                  className="text-base lg:text-sm font-bold text-white group-hover/card:text-violet-200 transition-colors"
-                >
+                {/* Title in bold white */}
+                <h4 className="text-base lg:text-sm font-bold text-white group-hover/card:text-violet-200 transition-colors">
                   {p.title}
-                </motion.h4>
+                </h4>
 
                 {/* Subtitle */}
                 <p className="text-xs text-zinc-400 font-mono mt-1 line-clamp-2 lg:line-clamp-1 [@media(max-height:760px)]:hidden leading-relaxed">
@@ -179,7 +173,7 @@ export default function ProjectsCard({ onViewAll }) {
                   <span className="transition-transform group-hover/card:translate-x-0.5">→</span>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 

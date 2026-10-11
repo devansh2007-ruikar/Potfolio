@@ -5,7 +5,6 @@ import DecryptText from './DecryptText'
 import CaseFileOverlay from './CaseFileOverlay'
 import Footer from './Footer'
 
-const springTransition = { type: 'spring', stiffness: 300, damping: 34, mass: 0.9 }
 
 const pageContainerVariants = {
   hidden: {},
@@ -214,14 +213,12 @@ export default function ProjectsPage() {
                     transition: {
                       duration: 0.35,
                       ease: [0.22, 1, 0.36, 1],
-                      delay: index * 0.06,
+                      delay: Math.min(index * 0.06, 0.2),
                     },
                   }}
                   exit={{ opacity: 0, y: 20, scale: 0.95, transition: { duration: 0.2 } }}
                 >
-                  <motion.div
-                    layoutId={`case-page-${p.id}`}
-                    transition={springTransition}
+                  <div
                     onClick={() => setSelectedId(p.id)}
                     onMouseMove={handleMouseMove}
                     style={{
@@ -344,7 +341,7 @@ export default function ProjectsPage() {
                         <span className="transition-transform group-hover:translate-x-1">→</span>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </motion.div>
               ))
             )}

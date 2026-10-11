@@ -5,7 +5,6 @@ import { projects as defaultProjects } from '../data/projects'
 import DecryptText from './DecryptText'
 import { useIsMobile } from '../hooks/useIsMobile'
 
-const springTransition = { type: 'spring', stiffness: 300, damping: 34, mass: 0.9 }
 
 const contentContainerVariants = {
   hidden: {
@@ -107,7 +106,7 @@ export default function CaseFileOverlay({
   selectedId,
   onClose,
   onExitComplete,
-  layoutPrefix = 'case',
+  _layoutPrefix = 'case',
   projects = defaultProjects,
 }) {
   const [mounted, setMounted] = useState(false)
@@ -120,17 +119,9 @@ export default function CaseFileOverlay({
     setMounted(true)
   }, [])
 
-  // Mount inner content late so the first frames only animate the light card shell
+  // Reset content ready when selectedId changes
   useEffect(() => {
-    if (selectedId) {
-      setContentReady(false)
-      const timer = setTimeout(() => {
-        setContentReady(true)
-      }, 280)
-      return () => clearTimeout(timer)
-    } else {
-      setContentReady(false)
-    }
+    setContentReady(false)
   }, [selectedId])
 
   // Lock body scroll while open and restore on close, preventing layout shift
@@ -180,7 +171,7 @@ export default function CaseFileOverlay({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.18 }}
             onClick={onClose}
             className="fixed inset-0 z-[100] bg-black/80 cursor-pointer"
           />
@@ -188,14 +179,22 @@ export default function CaseFileOverlay({
           {/* Modal Container */}
           <motion.div
             key={`case-modal-${project.id}`}
-            layoutId={`${layoutPrefix}-${project.id}`}
-            transition={springTransition}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: 8 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            onAnimationComplete={() => {
+              if (selectedId) {
+                setContentReady(true)
+              }
+            }}
             onClick={(e) => e.stopPropagation()}
             style={{
               '--accent': project.accent,
               borderRadius: isMobile ? 0 : 24,
               width: isMobile ? '100vw' : 'min(1100px, 94vw)',
               height: isMobile ? '100dvh' : 'min(88vh, 900px)',
+              willChange: 'transform, opacity',
             }}
             className="fixed inset-0 m-auto z-[101] bg-black [background-image:radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:20px_20px] border-0 md:border md:border-white/10 max-md:shadow-[0_10px_30px_rgba(0,0,0,0.5)] md:shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden"
           >
@@ -283,8 +282,8 @@ export default function CaseFileOverlay({
                     <h2 className="text-[clamp(1.75rem,8vw,2.5rem)] md:text-6xl font-bold tracking-tight text-white flex items-center gap-3 flex-wrap break-words hyphens-auto">
                       <DecryptText
                         text={project.title}
-                        trigger={selectedId}
-                        delay={250}
+                        trigger={contentReady}
+                        delay={0}
                       />
                       <span
                         className={`text-xs font-mono px-2.5 py-1 rounded-full border ${project.badgeColor}`}

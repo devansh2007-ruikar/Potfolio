@@ -70,9 +70,9 @@ export default function App() {
     if (view === 'About Me' && next !== 'About Me') {
       leaveAboutMe()
     }
+    window.scrollTo({ top: 0, behavior: 'instant' })
     setView(next)
     if (next !== 'About Me') setIntroActive(false)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const isIntroOnScreen = view === 'About Me' && introActive
@@ -107,7 +107,7 @@ export default function App() {
               exit={{
                 opacity: 0,
                 y: -12,
-                transition: { duration: 0.2 },
+                transition: { duration: 0.12 },
               }}
             >
               <ProjectsPage />
@@ -124,7 +124,7 @@ export default function App() {
               exit={{
                 opacity: 0,
                 y: -12,
-                transition: { duration: 0.2 },
+                transition: { duration: 0.12 },
               }}
             >
               <AboutPage
@@ -144,7 +144,7 @@ export default function App() {
               exit={{
                 opacity: 0,
                 y: -12,
-                transition: { duration: 0.2 },
+                transition: { duration: 0.12 },
               }}
               className="flex-1 flex flex-col min-h-0 lg:h-full"
             >
