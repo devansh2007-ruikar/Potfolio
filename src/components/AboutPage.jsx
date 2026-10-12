@@ -41,7 +41,7 @@ function RotatingRole({ shouldReduceMotion }) {
   )
 }
 
-function MagneticButton({ children, className, onClick, href, download, shouldReduceMotion }) {
+function MagneticButton({ children, className, onClick, shouldReduceMotion }) {
   const ref = useRef(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -73,13 +73,10 @@ function MagneticButton({ children, className, onClick, href, download, shouldRe
     y.set(0)
   }
 
-  const Comp = href ? motion.a : motion.button
-
   return (
-    <Comp
+    <motion.button
       ref={ref}
-      href={href}
-      download={download}
+      type="button"
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -87,7 +84,7 @@ function MagneticButton({ children, className, onClick, href, download, shouldRe
       className={className}
     >
       {children}
-    </Comp>
+    </motion.button>
   )
 }
 
@@ -410,18 +407,6 @@ export default function AboutPage({ onViewWork, onIntroActiveChange }) {
                 >
                   <span>View my work</span>
                   <span>→</span>
-                </MagneticButton>
-
-                <MagneticButton
-                  href={links.resume}
-                  download
-                  shouldReduceMotion={shouldReduceMotion}
-                  className="min-h-[44px] px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-white text-xs font-mono font-semibold tracking-wider uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <span>Download résumé</span>
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
                 </MagneticButton>
               </div>
             </div>
